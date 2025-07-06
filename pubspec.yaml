@@ -1,0 +1,62 @@
+name: cat_zson_pro
+description: "Flutter Clean Framework - A scaffolding framework for Flutter applications"
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  # Core Dependencies
+  cupertino_icons: ^1.0.8
+  # State Management & Navigation
+  get: ^4.7.2
+  # Storage
+  get_storage: ^2.1.1
+  # Network
+  http: ^1.2.2
+  dio: ^5.7.0
+  # JSON Serialization
+  json_annotation: ^4.9.0
+  # UI & Media
+  cached_network_image: ^3.4.1
+  responsive_framework: ^1.5.1
+  # Utilities
+  intl: ^0.19.0
+  uuid: ^4.5.1
+  crypto: ^3.0.6
+  # Icons & Launcher
+  flutter_launcher_icons: ^0.14.4
+  logger: ^2.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  
+  # Code Generation
+  build_runner: ^2.4.14
+  json_serializable: ^6.9.3
+
+flutter:
+  uses-material-design: true
+  
+  # Framework Assets
+  assets:
+    - assets/config/
+  
+  # Additional assets placeholder - to be configured as needed
+  # assets:
+  #   - assets/images/
+  #   - assets/icons/
+  
+  # Fonts placeholder - to be configured as needed  
+  # fonts:
+  #   - family: CustomFont
+  #     fonts:
+  #       - asset: fonts/CustomFont-Regular.ttf

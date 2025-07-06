@@ -1,0 +1,17 @@
+{
+  "debug": true,
+  "appName": "Cat Framework",
+  "version": "1.0.0",
+  "apiBaseUrl": "https://api.example.com",
+  "timeout": 30,
+  "environment": "development",
+  "features": {
+    "enableLogging": true,
+    "enableCrashReporting": false,
+    "enableAnalytics": false
+  },
+  "ui": {
+    "defaultTheme": "light",
+    "animationDuration": 300
+  }
+}
