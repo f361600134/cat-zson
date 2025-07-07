@@ -100,8 +100,7 @@ class CatFramework {
     GlobalKey<ScaffoldMessengerState>? scaffoldMessengerKey,
   }) {
     if (!_isInitialized) {
-      throw Exception(
-          '[CatFramework] Framework not initialized. Call initialize() first.');
+      throw Exception('[CatFramework] Framework not initialized. Call initialize() first.');
     }
     final themeService = Get.find<ThemeService>();
     return Obx(() {

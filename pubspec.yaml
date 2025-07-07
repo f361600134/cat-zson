@@ -26,6 +26,8 @@ dependencies:
   # UI & Media
   cached_network_image: ^3.4.1
   responsive_framework: ^1.5.1
+  sidebarx: ^0.17.1
+
   # Utilities
   intl: ^0.19.0
   uuid: ^4.5.1
