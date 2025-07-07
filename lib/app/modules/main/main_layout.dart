@@ -1,248 +1,420 @@
-import 'package:cat_zson_pro/app/modules/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:responsive_framework/responsive_framework.dart' as rf;
-import 'package:sidebarx/sidebarx.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import '../../core/navigation/responsive_navigation.dart';
 import '../../routes/app_routes.dart';
-import '../../utils/logger.dart';
-import '../settings/settings_page.dart';
+import '../home/home_page.dart';
 
+/// 主布局页面 - 展示响应式框架的最佳实践
 class MainLayout extends StatelessWidget {
   const MainLayout({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<CatNavigationController>();
     return CatResponsiveScaffold(
+      navigationItems: _buildNavigationItems(),
+      config: _buildNavigationConfig(context),
+      onRouteChanged: (route) {
+        debugPrint('Route changed to: $route');
+      },
       title: 'Cat Framework',
-      navigationItems: _navigationItems,
-      config: _navigationConfig(context),
-      onRouteChanged: (route) => logger.d('Route changed to: $route'),
+      centerTitle: false,
       actions: [
-        _buildSearchButton(),
-        _buildNotificationButton(),
-        _buildUserAvatar(context),
+        IconButton(
+          icon: const Icon(Icons.brightness_6),
+          onPressed: () => _toggleTheme(),
+          tooltip: '切换主题',
+        ),
+        IconButton(
+          icon: const Icon(Icons.language),
+          onPressed: () => _showLanguageDialog(context),
+          tooltip: '切换语言',
+        ),
       ],
-      body: _buildBody(controller),
-      floatingActionButton: _buildFAB(),
+      body: _buildMainContent(),
     );
   }
 
-  List<NavigationItem> get _navigationItems => [
-    _navItem(Icons.dashboard_outlined, '仪表板', AppRoutes.dashboard),
-    _navItem(Icons.analytics_outlined, '数据分析', AppRoutes.analytics),
-    _navItem(Icons.inventory_2_outlined, '产品管理', AppRoutes.products),
-    _navItem(Icons.people_outline, '用户管理', AppRoutes.users),
-    _navItem(Icons.shopping_cart_outlined, '订单管理', AppRoutes.orders),
-    _navItem(Icons.campaign_outlined, '营销中心', AppRoutes.marketing),
-    _navItem(Icons.support_agent_outlined, '客户服务', AppRoutes.support),
-    _navItem(Icons.settings_outlined, '系统设置', AppRoutes.settings),
-  ];
-
-  NavigationItem _navItem(IconData icon, String label, String route) =>
-      NavigationItem(icon: icon, label: label, route: route);
-
-  NavigationConfig _navigationConfig(BuildContext context) => NavigationConfig(
-    extendedWidth: 280,
-    collapsedWidth: 80,
-    drawerWidth: 300,
-    animationDuration: const Duration(milliseconds: 250),
-    showToggleButton: true,
-    appName: 'Cat Framework',
-    logo: _buildLogo(context),
-    headerBuilder: _buildHeader,
-    footerBuilder: _buildFooter,
-    theme: _sidebarTheme(context),
-  );
-
-  Widget _buildBody(CatNavigationController controller) => rf.MaxWidthBox(
-    maxWidth: 1400,
-    child: AnimatedSwitcher(
-      duration: const Duration(milliseconds: 200),
-      switchInCurve: Curves.easeInOut,
-      switchOutCurve: Curves.easeInOut,
-      child: Container(
-        key: ValueKey(controller.currentRoute.value),
-        width: double.infinity,
-        padding: const EdgeInsets.all(12),
-        child: _routeWidget(controller.currentRoute.value),
+  /// 构建导航项
+  List<NavigationItem> _buildNavigationItems() {
+    return [
+      NavigationItem(
+        icon: Icons.dashboard_outlined,
+        label: '仪表板',
+        route: AppRoutes.dashboard,
       ),
-    ),
-  );
-
-  Widget _routeWidget(String route) {
-    return switch (route) {
-      AppRoutes.dashboard => const DashboardPage(),
-      AppRoutes.analytics => const AnalyticsPage(),
-      AppRoutes.products => const ProductsPage(),
-      AppRoutes.users => const UsersPage(),
-      AppRoutes.orders => const OrdersPage(),
-      AppRoutes.marketing => const MarketingPage(),
-      AppRoutes.support => const SupportPage(),
-      AppRoutes.settings => const SettingsPage(),
-      _ => const DashboardPage(),
-    };
+      NavigationItem(
+        icon: Icons.analytics_outlined,
+        label: '数据分析',
+        route: AppRoutes.analytics,
+      ),
+      NavigationItem(
+        icon: Icons.inventory_2_outlined,
+        label: '产品管理',
+        route: AppRoutes.products,
+      ),
+      NavigationItem(
+        icon: Icons.people_outline,
+        label: '用户管理',
+        route: AppRoutes.users,
+      ),
+      NavigationItem(
+        icon: Icons.shopping_cart_outlined,
+        label: '订单管理',
+        route: AppRoutes.orders,
+      ),
+      NavigationItem(
+        icon: Icons.campaign_outlined,
+        label: '营销中心',
+        route: AppRoutes.marketing,
+      ),
+      NavigationItem(
+        icon: Icons.support_agent_outlined,
+        label: '客户服务',
+        route: AppRoutes.support,
+      ),
+      NavigationItem(
+        icon: Icons.settings_outlined,
+        label: '系统设置',
+        route: AppRoutes.settings,
+      ),
+    ];
   }
 
-  SidebarXTheme _sidebarTheme(BuildContext context) => SidebarXTheme(
-    decoration: BoxDecoration(
-      color: Theme.of(context).colorScheme.surface,
-      border: Border(
-        right: BorderSide(
-          color: Theme.of(context).dividerColor.withOpacity(0.12),
+  /// 构建导航配置
+  NavigationConfig _buildNavigationConfig(BuildContext context) {
+    return NavigationConfig(
+      extendedWidth: 280,
+      collapsedWidth: 72,
+      drawerWidth: 300,
+      animationDuration: const Duration(milliseconds: 250),
+      showToggleButton: true,
+      appName: 'Cat Framework',
+      logo: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          gradient: LinearGradient(
+            colors: [
+              Theme.of(context).primaryColor,
+              Theme.of(context).primaryColor.withOpacity(0.8),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: const Icon(
+          Icons.pets,
+          color: Colors.white,
+          size: 24,
         ),
       ),
-    ),
-    iconTheme:
-    IconThemeData(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
-    selectedIconTheme:
-    IconThemeData(color: Theme.of(context).colorScheme.primary),
-    textStyle:
-    TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8)),
-    selectedTextStyle:
-    TextStyle(color: Theme.of(context).colorScheme.primary),
-    itemTextPadding: const EdgeInsets.only(left: 16),
-    selectedItemTextPadding: const EdgeInsets.only(left: 16),
-    itemDecoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-    selectedItemDecoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(12),
-      color: Theme.of(context).colorScheme.primary.withOpacity(0.08),
-      border:
-      Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(0.2)),
-    ),
-    itemPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-    selectedItemPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-    margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    padding: const EdgeInsets.symmetric(vertical: 8),
-    hoverColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.04),
-  );
+      headerBuilder: (context, extended) => _buildCustomHeader(context, extended),
+      footerBuilder: (context, extended) => _buildCustomFooter(context, extended),
+    );
+  }
 
-  Widget _buildLogo(BuildContext context) => Container(
-    width: 40,
-    height: 40,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8),
-      gradient: LinearGradient(
-        colors: [
-          Theme.of(context).primaryColor,
-          Theme.of(context).primaryColor.withOpacity(0.7),
+  /// 自定义头部
+  Widget _buildCustomHeader(BuildContext context, bool extended) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Theme.of(context).dividerColor.withOpacity(0.1),
+            width: 1,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              gradient: LinearGradient(
+                colors: [
+                  Theme.of(context).primaryColor,
+                  Theme.of(context).primaryColor.withOpacity(0.8),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: const Icon(
+              Icons.pets,
+              color: Colors.white,
+              size: 24,
+            ),
+          ),
+          if (extended) ...[
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Cat Framework',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    'v1.0.0',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
-    ),
-    child: const Icon(Icons.pets, color: Colors.white),
-  );
+    );
+  }
 
-  Widget _buildHeader(BuildContext context, bool extended) => extended
-      ? ListTile(
-    leading: _buildLogo(context),
-    title: const Text('Cat Framework', style: TextStyle(fontWeight: FontWeight.bold)),
-    subtitle: Text('v1.0.0', style: Theme.of(context).textTheme.bodySmall),
-  )
-      : const SizedBox.shrink();
-
-  Widget _buildFooter(BuildContext context, bool extended) => ListTile(
-    leading: const CircleAvatar(radius: 18, child: Icon(Icons.person)),
-    title: extended ? const Text('John Doe') : null,
-    subtitle: extended ? const Text('john@example.com') : null,
-    trailing: extended ? _userPopup(context) : null,
-  );
-
-  Widget _userPopup(BuildContext context) => PopupMenuButton<String>(
-    icon: const Icon(Icons.more_vert, size: 18),
-    onSelected: _handleUserAction,
-    itemBuilder: (context) => const [
-      PopupMenuItem(value: 'profile', child: Text('个人资料')),
-      PopupMenuItem(value: 'logout', child: Text('退出登录')),
-    ],
-  );
-
-  void _handleUserAction(String action) {
-    switch (action) {
-      case 'profile':
-        Get.toNamed(AppRoutes.profile);
-        break;
-      case 'logout':
-        Get.dialog(AlertDialog(
-          title: const Text('确认退出'),
-          content: const Text('您确定要退出登录吗？'),
-          actions: [
-            TextButton(onPressed: Get.back, child: const Text('取消')),
-            ElevatedButton(onPressed: Get.back, child: const Text('确认')),
+  /// 自定义底部
+  Widget _buildCustomFooter(BuildContext context, bool extended) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: Theme.of(context).dividerColor.withOpacity(0.1),
+            width: 1,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: extended ? 20 : 16,
+            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+            child: Icon(
+              Icons.person,
+              size: extended ? 20 : 16,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+          if (extended) ...[
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '管理员',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    'admin@example.com',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.logout, size: 18),
+              onPressed: () => _handleLogout(context),
+              tooltip: '退出登录',
+            ),
           ],
-        ));
+        ],
+      ),
+    );
+  }
+
+  /// 构建主内容区
+  Widget _buildMainContent() {
+    return ResponsiveRowColumn(
+      layout: ResponsiveBreakpoints.of(Get.context!).smallerThan(TABLET)
+          ? ResponsiveRowColumnType.COLUMN
+          : ResponsiveRowColumnType.ROW,
+      children: [
+        ResponsiveRowColumnItem(
+          rowFlex: 1,
+          child: Container(
+            width: double.infinity,
+            margin: const EdgeInsets.all(16),
+            child: GetBuilder<CatNavigationController>(
+              builder: (controller) {
+                return _getPageForRoute(controller.currentRoute.value);
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// 根据路由获取对应页面
+  Widget _getPageForRoute(String route) {
+    switch (route) {
+      case AppRoutes.dashboard:
+        return const DashboardPage();
+      case AppRoutes.analytics:
+        return const AnalyticsPage();
+      case AppRoutes.products:
+        return const ProductsPage();
+      case AppRoutes.users:
+        return const UsersPage();
+      case AppRoutes.orders:
+        return const OrdersPage();
+      case AppRoutes.marketing:
+        return const MarketingPage();
+      case AppRoutes.support:
+        return const SupportPage();
+      case AppRoutes.settings:
+        return const SettingsPage();
+      default:
+        return const DashboardPage();
     }
   }
 
-  Widget _buildSearchButton() => rf.ResponsiveVisibility(
-    hiddenConditions: const [rf.Condition.smallerThan(name: rf.TABLET)],
-    child: IconButton(icon: const Icon(Icons.search), onPressed: _showSearch),
-  );
+  /// 切换主题
+  void _toggleTheme() {
+    // 实现主题切换逻辑
+    debugPrint('Toggle theme');
+  }
 
-  void _showSearch() => Get.dialog(const AlertDialog(
-    title: Text('搜索'),
-    content: TextField(decoration: InputDecoration(hintText: '输入关键词')),
-  ));
-
-  Widget _buildNotificationButton() => IconButton(
-    icon: Stack(children: [
-      const Icon(Icons.notifications_outlined),
-      Positioned(
-        right: 0,
-        top: 0,
-        child: Container(
-          width: 8,
-          height: 8,
-          decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+  /// 显示语言选择对话框
+  void _showLanguageDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('选择语言'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.language),
+              title: const Text('中文'),
+              onTap: () => Navigator.pop(context),
+            ),
+            ListTile(
+              leading: const Icon(Icons.language),
+              title: const Text('English'),
+              onTap: () => Navigator.pop(context),
+            ),
+          ],
         ),
-      )
-    ]),
-    onPressed: _showNotifications,
-  );
-
-  void _showNotifications() => Get.bottomSheet(Container(
-    height: 400,
-    padding: const EdgeInsets.all(16),
-    decoration: const BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-    ),
-    child: const Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('通知', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-        Spacer(),
-        Center(child: Text('暂无新通知')),
-      ],
-    ),
-  ));
-
-  Widget _buildUserAvatar(BuildContext context) => rf.ResponsiveVisibility(
-    hiddenConditions: const [rf.Condition.smallerThan(name: rf.TABLET)],
-    child: Padding(
-      padding: const EdgeInsets.only(right: 16),
-      child: CircleAvatar(
-        radius: 16,
-        backgroundColor: Theme.of(context).primaryColor,
-        child: const Icon(Icons.person, size: 20, color: Colors.white),
       ),
-    ),
-  );
+    );
+  }
 
-  Widget _buildFAB() => rf.ResponsiveVisibility(
-    visibleConditions: const [rf.Condition.smallerThan(name: rf.TABLET)],
-    child: FloatingActionButton(
-      onPressed: _showCreateDialog,
-      child: const Icon(Icons.add),
-    ),
-  );
+  /// 处理退出登录
+  void _handleLogout(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('确认退出'),
+        content: const Text('确定要退出登录吗？'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('取消'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              // 实现退出登录逻辑
+            },
+            child: const Text('确定'),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
-  void _showCreateDialog() => Get.dialog(AlertDialog(
-    title: const Text('创建新项目'),
-    content: const Text('请选择要创建的项目类型'),
-    actions: [
-      TextButton(onPressed: Get.back, child: const Text('取消')),
-      ElevatedButton(onPressed: Get.back, child: const Text('创建')),
-    ],
-  ));
+/// 设置页面
+class SettingsPage extends StatelessWidget {
+  const SettingsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Theme.of(context).dividerColor.withOpacity(0.12),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.settings,
+            size: 48,
+            color: Theme.of(context).primaryColor,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            '系统设置',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '在这里可以配置系统的各种设置选项。',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 24),
+          _buildSettingsList(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSettingsList(BuildContext context) {
+    return Card(
+      child: Column(
+        children: [
+          ListTile(
+            leading: const Icon(Icons.palette),
+            title: const Text('主题设置'),
+            subtitle: const Text('配置应用外观主题'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {},
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.language),
+            title: const Text('语言设置'),
+            subtitle: const Text('切换应用显示语言'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {},
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.notifications),
+            title: const Text('通知设置'),
+            subtitle: const Text('管理系统通知偏好'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {},
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.security),
+            title: const Text('安全设置'),
+            subtitle: const Text('账户安全相关配置'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {},
+          ),
+        ],
+      ),
+    );
+  }
 }
