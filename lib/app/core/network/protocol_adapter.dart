@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cat_zson_pro/app/core/framework/cat_framework.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../utils/logger.dart';
@@ -50,15 +51,15 @@ class ApiResponse<T> {
   bool get failed => code > 100;
 
   /// 拦截并提示用户
-  bool intercept({bool showNotice = false}) {
+  bool intercept({bool notice = false}) {
     bool hasError = !success;
-    if (hasError && showNotice) {
+    if (hasError && notice) {
       if (warn) {
         // 显示警告
-        Get.snackbar('提示', message, backgroundColor: Colors.orange);
+        Cat.notify.showWarning(message:message);
       } else if (failed) {
         // 显示错误
-        Get.snackbar('错误', message, backgroundColor: Colors.red);
+        Cat.notify.showError(message: message);
       }
     }
     return hasError;
@@ -71,7 +72,7 @@ abstract class IProtocolResp {
 }
 
 /// 抽象协议接口
-abstract class IProtocol<T> {
+abstract class IProtocolReq<T> {
   /// 请求方法
   HttpMethod get method => HttpMethod.post;
 
@@ -87,19 +88,19 @@ abstract class IProtocol<T> {
 
 /// 协议客户端接口
 abstract class IProtocolClient {
-  Future<ApiResponse<T>> request<T>(IProtocol<T> proto);
+  Future<ApiResponse<T>> request<T>(IProtocolReq<T> proto);
 }
 
 /// 适配器插件抽象类
 abstract class AdapterPlugin {
   /// 请求前执行（可返回缓存、替换请求、拦截请求）
-  Future<ApiResponse<T>?> before<T>(IProtocol<T> proto);
+  Future<ApiResponse<T>?> before<T>(IProtocolReq<T> proto);
 
   /// 请求成功后执行（可缓存结果、打印日志等）
-  Future<void> after<T>(IProtocol<T> proto, ApiResponse<T> response);
+  Future<void> after<T>(IProtocolReq<T> proto, ApiResponse<T> response);
 
   /// 请求出错时执行（可选择是否拦截异常、处理重试）
-  Future<bool> onError<T>(IProtocol<T> proto, dynamic error);
+  Future<bool> onError<T>(IProtocolReq<T> proto, dynamic error);
 }
 
 /// 默认协议客户端实现
@@ -109,7 +110,7 @@ class DefaultProtocolClient extends IProtocolClient {
   DefaultProtocolClient({List<AdapterPlugin>?plugins}):plugins = plugins??[];
 
   @override
-  Future<ApiResponse<T>> request<T>(IProtocol<T> proto) async {
+  Future<ApiResponse<T>> request<T>(IProtocolReq<T> proto) async {
     switch (proto.method) {
       case HttpMethod.post:
         return _post(proto);
@@ -122,7 +123,7 @@ class DefaultProtocolClient extends IProtocolClient {
     }
   }
 
-  Future<ApiResponse<T>> _post<T>(IProtocol<T> proto) async {
+  Future<ApiResponse<T>> _post<T>(IProtocolReq<T> proto) async {
     final cached = await _runBefore(proto);
     if (cached != null) return cached;
 
@@ -147,7 +148,7 @@ class DefaultProtocolClient extends IProtocolClient {
     }
   }
 
-  Future<ApiResponse<T>> _get<T>(IProtocol<T> proto) async {
+  Future<ApiResponse<T>> _get<T>(IProtocolReq<T> proto) async {
     final cached = await _runBefore(proto);
     if (cached != null) return cached;
 
@@ -184,7 +185,7 @@ class DefaultProtocolClient extends IProtocolClient {
     }
   }
 
-  Future<ApiResponse<T>> _put<T>(IProtocol<T> proto) async {
+  Future<ApiResponse<T>> _put<T>(IProtocolReq<T> proto) async {
     final cached = await _runBefore(proto);
     if (cached != null) return cached;
 
@@ -209,7 +210,7 @@ class DefaultProtocolClient extends IProtocolClient {
     }
   }
 
-  Future<ApiResponse<T>> _delete<T>(IProtocol<T> proto) async {
+  Future<ApiResponse<T>> _delete<T>(IProtocolReq<T> proto) async {
     final cached = await _runBefore(proto);
     if (cached != null) return cached;
 
@@ -233,7 +234,7 @@ class DefaultProtocolClient extends IProtocolClient {
     }
   }
 
-  Future<ApiResponse<T>?> _runBefore<T>(IProtocol<T> proto) async {
+  Future<ApiResponse<T>?> _runBefore<T>(IProtocolReq<T> proto) async {
     for (final plugin in plugins) {
       final result = await plugin.before(proto);
       if (result != null) return result;
@@ -241,13 +242,13 @@ class DefaultProtocolClient extends IProtocolClient {
     return null;
   }
 
-  Future<void> _runAfter<T>(IProtocol<T> proto, ApiResponse<T> response) async {
+  Future<void> _runAfter<T>(IProtocolReq<T> proto, ApiResponse<T> response) async {
     for (final plugin in plugins) {
       await plugin.after(proto, response);
     }
   }
 
-  Future<bool> _runError<T>(IProtocol<T> proto, dynamic error) async {
+  Future<bool> _runError<T>(IProtocolReq<T> proto, dynamic error) async {
     for (final plugin in plugins) {
       final handled = await plugin.onError(proto, error);
       if (handled) return true;
@@ -263,30 +264,30 @@ class LoggingPlugin extends AdapterPlugin {
   LoggingPlugin({this.enableDetailLog = false});
 
   @override
-  Future<ApiResponse<T>?> before<T>(IProtocol<T> proto) async {
-    logger.i('📤 Sending: ${proto.url}');
+  Future<ApiResponse<T>?> before<T>(IProtocolReq<T> proto) async {
+    logger.i('Sending: ${proto.url}');
     if (enableDetailLog) {
-      logger.d('📤 Request: ${proto.toJson()}');
+      logger.d('Request: ${proto.toJson()}');
     }
     return null;
   }
 
   @override
-  Future<void> after<T>(IProtocol<T> proto, ApiResponse<T> response) async {
-    logger.i('✅ Success: ${proto.url} - Code: ${response.code}');
+  Future<void> after<T>(IProtocolReq<T> proto, ApiResponse<T> response) async {
+    logger.i('Success: ${proto.url} - Code: ${response.code}');
     if (enableDetailLog) {
       if (response.data is IProtocolResp) {
         var resp = response.data as IProtocolResp;
-        logger.d('✅ Response: ${resp.toJson()}');
+        logger.d('Response: ${resp.toJson()}');
       } else {
-        logger.d('✅ Response: ${response.message}');
+        logger.d('Response: ${response.message}');
       }
     }
   }
 
   @override
-  Future<bool> onError<T>(IProtocol<T> proto, error) async {
-    logger.e('❌ Error: ${proto.url}', error: error);
+  Future<bool> onError<T>(IProtocolReq<T> proto, error) async {
+    logger.e('Error: ${proto.url}', error: error);
     return false;
   }
 }
@@ -299,10 +300,10 @@ class RetryPlugin extends AdapterPlugin {
   RetryPlugin({this.maxRetries = 2});
 
   @override
-  Future<bool> onError<T>(IProtocol<T> proto, error) async {
+  Future<bool> onError<T>(IProtocolReq<T> proto, error) async {
     if (_currentRetryCount < maxRetries) {
       _currentRetryCount++;
-      logger.i('🔄 Retrying ${proto.url} (attempt $_currentRetryCount/$maxRetries)');
+      logger.i('Retrying ${proto.url} (attempt $_currentRetryCount/$maxRetries)');
       return true; // 告知框架重新执行请求
     }
     _currentRetryCount = 0; // 重置计数器
@@ -310,10 +311,10 @@ class RetryPlugin extends AdapterPlugin {
   }
 
   @override
-  Future<ApiResponse<T>?> before<T>(IProtocol<T> proto) async => null;
+  Future<ApiResponse<T>?> before<T>(IProtocolReq<T> proto) async => null;
 
   @override
-  Future<void> after<T>(IProtocol<T> proto, ApiResponse<T> response) async {
+  Future<void> after<T>(IProtocolReq<T> proto, ApiResponse<T> response) async {
     _currentRetryCount = 0; // 成功后重置
   }
 }
@@ -329,7 +330,7 @@ class LoadingPlugin extends AdapterPlugin {
   });
 
   @override
-  Future<ApiResponse<T>?> before<T>(IProtocol<T> proto) async {
+  Future<ApiResponse<T>?> before<T>(IProtocolReq<T> proto) async {
     if (showDialog) {
       Get.dialog(
         AlertDialog(
@@ -351,14 +352,14 @@ class LoadingPlugin extends AdapterPlugin {
   }
 
   @override
-  Future<void> after<T>(IProtocol<T> proto, ApiResponse<T> response) async {
+  Future<void> after<T>(IProtocolReq<T> proto, ApiResponse<T> response) async {
     if (showDialog && Get.isDialogOpen == true) {
       Get.back();
     }
   }
 
   @override
-  Future<bool> onError<T>(IProtocol<T> proto, error) async {
+  Future<bool> onError<T>(IProtocolReq<T> proto, error) async {
     if (showDialog && Get.isDialogOpen == true) {
       Get.back();
     }
@@ -374,14 +375,14 @@ class CachePlugin extends AdapterPlugin {
   CachePlugin({this.cacheDuration = const Duration(minutes: 5)});
 
   @override
-  Future<ApiResponse<T>?> before<T>(IProtocol<T> proto) async {
+  Future<ApiResponse<T>?> before<T>(IProtocolReq<T> proto) async {
     final key = _getCacheKey(proto);
     final cachedData = _cache[key];
     
     if (cachedData != null) {
       final cacheTime = cachedData['timestamp'] as DateTime;
       if (DateTime.now().difference(cacheTime) < cacheDuration) {
-        logger.d('📦 Cache hit: ${proto.url}');
+        logger.d('Cache hit: ${proto.url}');
         return cachedData['response'] as ApiResponse<T>;
       } else {
         _cache.remove(key);
@@ -391,21 +392,21 @@ class CachePlugin extends AdapterPlugin {
   }
 
   @override
-  Future<void> after<T>(IProtocol<T> proto, ApiResponse<T> response) async {
+  Future<void> after<T>(IProtocolReq<T> proto, ApiResponse<T> response) async {
     if (response.success) {
       final key = _getCacheKey(proto);
       _cache[key] = {
         'response': response,
         'timestamp': DateTime.now(),
       };
-      logger.d('💾 Cached: ${proto.url}');
+      logger.d('Cached: ${proto.url}');
     }
   }
 
   @override
-  Future<bool> onError<T>(IProtocol<T> proto, error) async => false;
+  Future<bool> onError<T>(IProtocolReq<T> proto, error) async => false;
 
-  String _getCacheKey<T>(IProtocol<T> proto) {
+  String _getCacheKey<T>(IProtocolReq<T> proto) {
     return '${proto.url}_${proto.toJson().toString()}';
   }
 

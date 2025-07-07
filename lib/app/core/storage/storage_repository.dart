@@ -25,73 +25,73 @@ abstract class IStorageRepository<T> {
 }
 
 /// 单一对象存储仓库 - 用于存储单个配置或用户信息等
-class SingleStorageRepository<T> implements IStorageRepository<T> {
-  final GetStorage _storage;
-  final String _storageKey;
-
-  SingleStorageRepository({
-    required GetStorage storage,
-    required String storageKey,
-  }) : _storage = storage, _storageKey = storageKey;
-
-  @override
-  T? read({required T Function(Map<String, dynamic>) fromJson}) {
-    try {
-      final data = _storage.read(_storageKey);
-      if (data != null && data is Map<String, dynamic>) {
-        return fromJson(data);
-      }
-      return null;
-    } catch (e) {
-      print('[SingleStorageRepository] Read error for key $_storageKey: $e');
-      return null;
-    }
-  }
-
-  @override
-  T readOrDefault({
-    required T Function(Map<String, dynamic>) fromJson,
-    required T defaultValue,
-  }) {
-    try {
-      final data = _storage.read(_storageKey);
-      if (data != null && data is Map<String, dynamic>) {
-        return fromJson(data);
-      }
-      return defaultValue;
-    } catch (e) {
-      print('[SingleStorageRepository] ReadOrDefault error for key $_storageKey: $e');
-      return defaultValue;
-    }
-  }
-
-  @override
-  void write({
-    required T item,
-    required Map<String, dynamic> Function(T) toJson,
-  }) {
-    try {
-      _storage.write(_storageKey, toJson(item));
-    } catch (e) {
-      print('[SingleStorageRepository] Write error for key $_storageKey: $e');
-      rethrow;
-    }
-  }
-
-  @override
-  void remove() {
-    try {
-      _storage.remove(_storageKey);
-    } catch (e) {
-      print('[SingleStorageRepository] Remove error for key $_storageKey: $e');
-    }
-  }
-
-  @override
-  bool exists() {
-    return _storage.hasData(_storageKey);
-  }
-}
+// class SingleStorageRepository<T> implements IStorageRepository<T> {
+//   final GetStorage _storage;
+//   final String _storageKey;
+//
+//   SingleStorageRepository({
+//     required GetStorage storage,
+//     required String storageKey,
+//   }) : _storage = storage, _storageKey = storageKey;
+//
+//   @override
+//   T? read({required T Function(Map<String, dynamic>) fromJson}) {
+//     try {
+//       final data = _storage.read(_storageKey);
+//       if (data != null && data is Map<String, dynamic>) {
+//         return fromJson(data);
+//       }
+//       return null;
+//     } catch (e) {
+//       print('[SingleStorageRepository] Read error for key $_storageKey: $e');
+//       return null;
+//     }
+//   }
+//
+//   @override
+//   T readOrDefault({
+//     required T Function(Map<String, dynamic>) fromJson,
+//     required T defaultValue,
+//   }) {
+//     try {
+//       final data = _storage.read(_storageKey);
+//       if (data != null && data is Map<String, dynamic>) {
+//         return fromJson(data);
+//       }
+//       return defaultValue;
+//     } catch (e) {
+//       print('[SingleStorageRepository] ReadOrDefault error for key $_storageKey: $e');
+//       return defaultValue;
+//     }
+//   }
+//
+//   @override
+//   void write({
+//     required T item,
+//     required Map<String, dynamic> Function(T) toJson,
+//   }) {
+//     try {
+//       _storage.write(_storageKey, toJson(item));
+//     } catch (e) {
+//       print('[SingleStorageRepository] Write error for key $_storageKey: $e');
+//       rethrow;
+//     }
+//   }
+//
+//   @override
+//   void remove() {
+//     try {
+//       _storage.remove(_storageKey);
+//     } catch (e) {
+//       print('[SingleStorageRepository] Remove error for key $_storageKey: $e');
+//     }
+//   }
+//
+//   @override
+//   bool exists() {
+//     return _storage.hasData(_storageKey);
+//   }
+// }
 
 /// 列表存储仓库 - 用于存储对象列表
 class ListStorageRepository<T> {
@@ -347,17 +347,17 @@ class StorageManager {
     return _storageInstances[containerName];
   }
 
-  /// 创建单一对象存储仓库
-  SingleStorageRepository<T> createSingleRepository<T>({
-    required String containerName,
-    required String key,
-  }) {
-    final storage = getStorage(containerName);
-    if (storage == null) {
-      throw Exception('Storage container $containerName not initialized');
-    }
-    return SingleStorageRepository<T>(storage: storage, storageKey: key);
-  }
+  // /// 创建单一对象存储仓库
+  // SingleStorageRepository<T> createSingleRepository<T>({
+  //   required String containerName,
+  //   required String key,
+  // }) {
+  //   final storage = getStorage(containerName);
+  //   if (storage == null) {
+  //     throw Exception('Storage container $containerName not initialized');
+  //   }
+  //   return SingleStorageRepository<T>(storage: storage, storageKey: key);
+  // }
 
   /// 创建列表存储仓库
   ListStorageRepository<T> createListRepository<T>({
