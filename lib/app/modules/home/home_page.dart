@@ -1,9 +1,10 @@
 import 'package:cat_zson_pro/app/core/event/event_bus.dart';
 import 'package:cat_zson_pro/app/core/framework/cat_framework.dart';
-import 'package:cat_zson_pro/app/routes/app_pages.dart';
+import 'package:cat_zson_pro/app/core/navigation/cat_navigation_controller.dart';
 import 'package:cat_zson_pro/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -288,3 +289,185 @@ class DemoPage extends StatelessWidget {
     );
   }
 }
+
+class AnalyticsPage extends StatelessWidget {
+  const AnalyticsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Theme.of(context).dividerColor.withValues(alpha: 0.12),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.analytics,
+            size: 48,
+            color: Theme.of(context).primaryColor,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            '数据分析',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '数据分析页面，展示各种图表和统计信息。',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+// 其他页面的简单实现
+class ProductsPage extends StatelessWidget {
+  const ProductsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildSimplePage(context, '产品管理', Icons.inventory_2);
+  }
+}
+
+class UsersPage extends StatelessWidget {
+  const UsersPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildSimplePage(context, '用户管理', Icons.people);
+  }
+}
+
+class OrdersPage extends StatelessWidget {
+  const OrdersPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildSimplePage(context, '订单管理', Icons.shopping_cart);
+  }
+}
+
+class MarketingPage extends StatelessWidget {
+  const MarketingPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildSimplePage(context, '营销中心', Icons.campaign);
+  }
+}
+
+class SupportPage extends StatelessWidget {
+  const SupportPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildSimplePage(context, '客户服务', Icons.support_agent);
+  }
+}
+
+Widget _buildSimplePage(BuildContext context, String title, IconData icon) {
+  return Container(
+    margin: const EdgeInsets.all(8),
+    padding: const EdgeInsets.all(24),
+    decoration: BoxDecoration(
+      color: Theme.of(context).colorScheme.surface,
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(
+        color: Theme.of(context).dividerColor.withValues(alpha: 0.12),
+      ),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          icon,
+          size: 48,
+          color: Theme.of(context).primaryColor,
+        ),
+        const SizedBox(height: 16),
+        Text(
+          title,
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          '$title页面的内容将在这里展示。',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      ],
+    ),
+  );
+}
+
+
+// 示例页面组件
+class DashboardPage extends StatelessWidget {
+  const DashboardPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ResponsiveRowColumn(
+      layout: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
+          ? ResponsiveRowColumnType.COLUMN
+          : ResponsiveRowColumnType.ROW,
+      children: [
+        ResponsiveRowColumnItem(
+          rowFlex: 1,
+          child: Container(
+            width: double.infinity,
+            margin: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: Theme.of(context).dividerColor.withValues(alpha: 0.12),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.dashboard,
+                  size: 48,
+                  color: Theme.of(context).primaryColor,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  '仪表板',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '这是一个响应式仪表板页面，会根据屏幕大小自动调整布局。',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: () {
+                    Get.find<CatNavigationController>().navigateTo(AppRoutes.analytics);
+                  },
+                  child: const Text('查看数据分析'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+

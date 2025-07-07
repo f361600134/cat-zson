@@ -1,19 +1,17 @@
 import 'package:cat_zson_pro/app/modules/home/home_page.dart';
 import 'package:cat_zson_pro/app/modules/main/main_layout.dart';
 import 'package:cat_zson_pro/app/modules/profile/profile_page.dart';
-import 'package:cat_zson_pro/test_navigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'app_routes.dart';
 
 class AppPages {
 
-  static final initial = '/';
+  static final initial = AppRoutes.mainLayout;
 
   static final routes = [
     GetPage(name: '/', page: () => const HomePage()),
     GetPage(name: '/demo', page: () => const DemoPage()),
-    GetPage(name: '/test', page: () => const TestNavigationPage()),
     GetPage(name: AppRoutes.mainLayout, page: () => const MainLayout()),
     GetPage(name: AppRoutes.dashboard, page: () => const MainLayout()),
     GetPage(name: AppRoutes.analytics, page: () => const MainLayout()),

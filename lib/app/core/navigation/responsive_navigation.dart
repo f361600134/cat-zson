@@ -26,7 +26,7 @@ class CatResponsiveScaffold extends StatefulWidget {
   final void Function(String route)? onRouteChanged;
   
   const CatResponsiveScaffold({
-    Key? key,
+    super.key,
     required this.body,
     required this.navigationItems,
     this.appBar,
@@ -41,7 +41,7 @@ class CatResponsiveScaffold extends StatefulWidget {
     this.centerTitle,
     this.elevation,
     this.onRouteChanged,
-  }) : super(key: key);
+  }) ;
 
   @override
   State<CatResponsiveScaffold> createState() => _CatResponsiveScaffoldState();
@@ -50,6 +50,7 @@ class CatResponsiveScaffold extends StatefulWidget {
 class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
   CatNavigationController? _controller;
   bool _isInitialized = false;
+  String _currentBreakpoint = '';
 
   @override
   void initState() {
@@ -65,12 +66,8 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
   
   Future<void> _initializeControllerAsync() async {
     // 尝试查找现有的控制器，如果没有则创建新的
-    try {
-      _controller = Get.find<CatNavigationController>();
-    } catch (e) {
-      _controller = Get.put(CatNavigationController(), permanent: true);
-    }
-    
+    _controller = Get.find<CatNavigationController>();
+
     // 等待到下一个事件循环
     await Future.delayed(Duration.zero);
     
@@ -95,6 +92,46 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    
+    // 安全地检查断点变化
+    if (_isInitialized && _controller != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _checkBreakpointChanges();
+      });
+    }
+  }
+  
+  void _checkBreakpointChanges() {
+    if (!mounted || _controller == null) return;
+    
+    final breakpoints = ResponsiveBreakpoints.of(context);
+    final isDesktop = breakpoints.largerThan(TABLET);
+    final isTablet = breakpoints.equals(TABLET);
+    final isMobile = breakpoints.isMobile;
+    
+    String newBreakpoint = '';
+    if (isDesktop) {
+      newBreakpoint = 'desktop';
+    } else if (isTablet) {
+      newBreakpoint = 'tablet';
+    } else {
+      newBreakpoint = 'mobile';
+    }
+    
+    // 只在断点真正改变时更新
+    if (_currentBreakpoint != newBreakpoint) {
+      _currentBreakpoint = newBreakpoint;
+      _controller!.updateDeviceType(
+        isDesktop: isDesktop,
+        isTablet: isTablet,
+        isMobile: isMobile,
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     // 如果还没有初始化完成，显示loading
     if (!_isInitialized || _controller == null) {
@@ -112,7 +149,6 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
     // 判断设备类型（仅读取，不更新状态）
     final isDesktop = ResponsiveBreakpoints.of(context).largerThan(TABLET);
     final isTablet = ResponsiveBreakpoints.of(context).equals(TABLET);
-    final isMobile = ResponsiveBreakpoints.of(context).isMobile;
     
     // 构建不同布局
     if (isDesktop) {
@@ -244,7 +280,12 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
       leading: showMenuButton
           ? IconButton(
               icon: const Icon(Icons.menu),
-              onPressed: () => controller.toggleSidebar(),
+              onPressed: () {
+                // 使用 post frame callback 避免在鼠标事件处理期间更新状态
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  controller.toggleSidebar();
+                });
+              },
             )
           : widget.leading,
       title: widget.title != null ? Text(widget.title!) : null,
@@ -293,7 +334,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
       ),
       selectedItemDecoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: theme.colorScheme.primary.withOpacity(0.1),
+        color: theme.colorScheme.primary.withValues(alpha: 0.1),
       ),
       margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 4), // 减少边距
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4), // 减少内边距
@@ -378,7 +419,12 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
         extended ? Icons.chevron_left : Icons.chevron_right,
         size: 20,
       ),
-      onPressed: () => controller.toggleSidebar(),
+      onPressed: () {
+        // 使用 post frame callback 避免在构建期间更新状态
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          controller.toggleSidebar();
+        });
+      },
     );
   }
   
@@ -392,35 +438,23 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
         icon: item.icon,
         label: item.label,
         onTap: () {
-          // 如果是抽屉模式，选择后关闭抽屉
-          if (isDrawer) {
-            Get.back();
-          }
-          
-          // 执行路由跳转
-          if (item.route != null) {
-            controller.navigateTo(item.route!);
-            widget.onRouteChanged?.call(item.route!);
-          }
-          
-          // 执行自定义回调
-          item.onTap?.call();
+          // 使用 post frame callback 避免在鼠标事件处理期间执行状态更新
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            // 如果是抽屉模式，选择后关闭抽屉
+            if (isDrawer) {
+              Get.back();
+            }
+            
+            // 执行路由跳转
+            if (item.route != null) {
+              controller.navigateTo(item.route!);
+              widget.onRouteChanged?.call(item.route!);
+            }
+            
+            // 执行自定义回调
+            item.onTap?.call();
+          });
         },
-        iconWidget: SizedBox(
-          width: 24,
-          height: 24,
-          child: Icon(
-            item.icon,
-            size: 20,
-          ),
-        ),
-        // labelWidget: Flexible(
-        //   child: Text(
-        //     item.label,
-        //     overflow: TextOverflow.ellipsis,
-        //     maxLines: 1,
-        //   ),
-        // ),
       );
     }).toList();
   }

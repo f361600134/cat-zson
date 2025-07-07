@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:responsive_framework/responsive_framework.dart' hide Condition;
 import 'package:responsive_framework/responsive_framework.dart' as rf;
 
@@ -16,13 +15,14 @@ class ProfilePage extends StatelessWidget {
         ResponsiveRowColumnItem(
           rowFlex: 1,
           child: Container(
+            width: double.infinity,
             margin: const EdgeInsets.all(8),
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Theme.of(context).dividerColor.withOpacity(0.12),
+                color: Theme.of(context).dividerColor.withValues(alpha: 0.12),
               ),
             ),
             child: Column(
@@ -33,7 +33,7 @@ class ProfilePage extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 40,
-                      backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                      backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                       child: Icon(
                         Icons.person,
                         size: 40,
@@ -53,14 +53,14 @@ class ProfilePage extends StatelessWidget {
                           Text(
                             'john@example.com',
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
+                              color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                             ),
                           ),
                           const SizedBox(height: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor.withOpacity(0.1),
+                              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: Text(
@@ -208,7 +208,7 @@ class ProfilePage extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             border: Border.all(
-              color: Theme.of(context).dividerColor.withOpacity(0.2),
+              color: Theme.of(context).dividerColor.withValues(alpha: 0.2),
             ),
             borderRadius: BorderRadius.circular(8),
           ),
@@ -229,7 +229,7 @@ class ProfilePage extends StatelessWidget {
             child: Text(
               label,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
+                color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
               ),
             ),
           ),

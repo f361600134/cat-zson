@@ -96,52 +96,61 @@ class CatNavigationController extends GetxController {
     
     // 只在设备类型真正改变且是桌面端时才自动展开侧边栏
     if (hasChanged && isDesktop && !isSidebarExpanded.value) {
-      Future.microtask(() => expandSidebar());
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        expandSidebar();
+      });
     }
   }
   
   /// 切换侧边栏状态
   void toggleSidebar() {
-    try {
-      if (isMobile.value) {
-        // 移动端：打开/关闭抽屉
-        if (scaffoldKey.currentState?.isDrawerOpen ?? false) {
-          Get.back();
+    // 使用 WidgetsBinding.instance.addPostFrameCallback 确保在安全的时机执行
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      try {
+        if (isMobile.value) {
+          // 移动端：打开/关闭抽屉
+          if (scaffoldKey.currentState?.isDrawerOpen ?? false) {
+            Get.back();
+          } else {
+            scaffoldKey.currentState?.openDrawer();
+          }
         } else {
-          scaffoldKey.currentState?.openDrawer();
+          // 桌面端和平板端：展开/收缩
+          isSidebarExpanded.value = !isSidebarExpanded.value;
+          sidebarController.setExtended(isSidebarExpanded.value);
         }
-      } else {
-        // 桌面端和平板端：展开/收缩
-        isSidebarExpanded.value = !isSidebarExpanded.value;
-        sidebarController.setExtended(isSidebarExpanded.value);
+      } catch (e) {
+        // 忽略切换错误
       }
-    } catch (e) {
-      // 忽略切换错误
-    }
+    });
   }
   
   /// 展开侧边栏
   void expandSidebar() {
-    try {
-      if (!isMobile.value) {
-        isSidebarExpanded.value = true;
-        sidebarController.setExtended(true);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      try {
+        if (!isMobile.value) {
+          isSidebarExpanded.value = true;
+          sidebarController.setExtended(true);
+        }
+      } catch (e) {
+        // 忽略展开错误
       }
-    } catch (e) {
-      // 忽略展开错误
-    }
+    });
   }
   
   /// 收缩侧边栏
   void collapseSidebar() {
-    try {
-      if (!isMobile.value) {
-        isSidebarExpanded.value = false;
-        sidebarController.setExtended(false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      try {
+        if (!isMobile.value) {
+          isSidebarExpanded.value = false;
+          sidebarController.setExtended(false);
+        }
+      } catch (e) {
+        // 忽略收缩错误
       }
-    } catch (e) {
-      // 忽略收缩错误
-    }
+    });
   }
   
   /// 导航到指定路由

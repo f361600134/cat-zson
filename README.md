@@ -1,389 +1,249 @@
-# 🐱 Cat Framework
+# Cat Framework
 
-> A powerful, modular Flutter framework that provides enterprise-grade architecture patterns and reusable components.
+一个功能强大的 Flutter 脚手架框架，基于从 yueji_client 工程提炼出的最佳实践。
 
-Cat Framework is a sophisticated Flutter scaffolding framework designed to accelerate development while maintaining code quality and architectural integrity. Built with inspiration from the excellent design patterns found in production applications, it provides a solid foundation for building scalable Flutter applications.
+## 🎯 核心特性
 
-## ✨ Features
+### 响应式导航系统
+- ✅ **智能断点判断** - 自动识别移动端、平板、桌面端
+- ✅ **多模式导航** - 抽屉式(移动端) / 可收缩侧边栏(平板) / 固定侧边栏(桌面端)
+- ✅ **SidebarX 深度集成** - 丰富的自定义配置选项
+- ✅ **完整路由管理** - 路由跳转、历史记录、状态管理
 
-### 🏗️ **Core Architecture**
-- **Modular Design**: Clean separation of concerns with well-defined modules
-- **Dependency Injection**: Powered by GetX for efficient service management
-- **Type Safety**: Comprehensive use of Dart generics for runtime safety
-- **Event-Driven**: Decoupled communication through a robust event bus system
+### 框架能力
+- 🏗️ **模块化架构** - 清晰的项目结构和依赖注入
+- 🌐 **网络层封装** - 基于 Dio 的协议适配器
+- 💾 **存储管理** - 类型安全的本地存储方案
+- 🎨 **主题系统** - 支持亮色/暗色主题切换
+- 🌍 **国际化支持** - 多语言切换机制
+- 📢 **事件总线** - 模块间解耦通信
+- ⚡ **异步任务** - 轮询服务和任务管理
+- 🔔 **通知系统** - 优雅的消息提示
 
-### 📦 **Configuration Management**
-- **Multi-Source Loading**: Support for local assets and remote configurations
-- **Type-Safe Configs**: Generic-based configuration with compile-time safety
-- **Hot Reloading**: MD5-based cache validation for remote configs
-- **Lifecycle Management**: Automatic cleanup and memory management
+## 🚀 快速开始
 
-### 🌐 **Network Layer**
-- **Protocol Adapter Pattern**: Extensible HTTP client with plugin architecture
-- **Plugin System**: Logging, retry, caching, and loading plugins
-- **Type-Safe APIs**: Strongly-typed request/response handling
-- **Error Handling**: Comprehensive error handling and recovery mechanisms
-
-### 💾 **Storage Repository**
-- **Multiple Patterns**: Single object, list, and key-value storage repositories
-- **JSON Serialization**: Built-in support for complex object serialization
-- **Container Management**: Isolated storage containers for different data types
-- **Type Safety**: Generic-based storage with compile-time type checking
-
-### ⚡ **Async Task Management**
-- **Polling Service**: Configurable background task execution
-- **Retry Logic**: Built-in retry mechanisms with exponential backoff
-- **Status Tracking**: Real-time task status monitoring
-- **Resource Management**: Automatic cleanup and lifecycle management
-
-### 🎨 **UI & Theming**
-- **Dynamic Themes**: Runtime theme switching with custom color schemes
-- **Dark Mode**: Built-in light/dark mode support
-- **Responsive Design**: Device-adaptive UI components
-- **Notification System**: Beautiful, customizable toast notifications
-
-### 🌍 **Internationalization**
-- **Multi-Language**: Support for multiple languages with easy switching
-- **Type-Safe Keys**: Compile-time validation of translation keys
-- **Persistent Settings**: User language preferences are automatically saved
-- **RTL Support**: Right-to-left language support
-
-### 📡 **Event System**
-- **Event Bus**: Global event communication system
-- **Lifecycle Management**: Automatic subscription cleanup
-- **Type Safety**: Strongly-typed event definitions
-- **Filtering**: Event filtering and conditional handling
-
-## 🚀 Quick Start
-
-### Installation
-
-Add Cat Framework dependencies to your `pubspec.yaml`:
+### 1. 环境要求
 
 ```yaml
+environment:
+  sdk: ^3.6.0
+
 dependencies:
   flutter:
     sdk: flutter
   get: ^4.7.2
-  get_storage: ^2.1.1
-  http: ^1.2.2
-  crypto: ^3.0.6
-  json_annotation: ^4.9.0
-  intl: ^0.19.0
-  uuid: ^4.5.1
-
-dev_dependencies:
-  build_runner: ^2.4.14
-  json_serializable: ^6.9.3
+  responsive_framework: ^1.5.1
+  sidebarx: ^0.17.1
+  # ... 其他依赖见 pubspec.yaml
 ```
 
-### Basic Setup
+### 2. 初始化框架
 
 ```dart
-import 'package:flutter/material.dart';
-import 'app/core/framework/cat_framework.dart';
-import 'app/core/network/protocol_adapter.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Initialize the framework
+  // 初始化 Cat Framework
   await CatFramework.instance.initialize(
-    config: const CatFrameworkConfig(
-      appName: 'My App',
-      enableLogging: true,
-      enableEvents: true,
-      enablePolling: true,
-      enableThemes: true,
-      enableI18n: true,
-    ),
+    config: const CatFrameworkConfig(),
     networkPlugins: [
       LoggingPlugin(enableDetailLog: true),
-      RetryPlugin(maxRetries: 3),
       CachePlugin(),
+      RetryPlugin(maxRetries: 2),
     ],
   );
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
+```
 
-class MyApp extends StatelessWidget {
+### 3. 使用响应式导航
+
+```dart
+class MainLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return CatFramework.instance.createApp(
-      home: HomePage(),
-      title: 'My Cat App',
+    return ResponsiveBreakpoints(
+      breakpoints: const [
+        Breakpoint(start: 0, end: 450, name: MOBILE),
+        Breakpoint(start: 451, end: 800, name: TABLET),
+        Breakpoint(start: 801, end: 1920, name: DESKTOP),
+      ],
+      child: GetBuilder<CatNavigationController>(
+        init: CatNavigationController(),
+        builder: (controller) {
+          return CatResponsiveScaffold(
+            navigationItems: navigationItems,
+            config: navigationConfig,
+            title: 'Cat Framework',
+            body: bodyWidget,
+            onRouteChanged: (route) {
+              // 处理路由变化
+            },
+          );
+        },
+      ),
     );
   }
 }
 ```
 
-## 📖 Usage Examples
+## 📱 响应式行为
 
-### Configuration Management
+| 设备类型 | 屏幕宽度 | 导航模式 | 特性 |
+|---------|---------|---------|------|
+| 移动端 | ≤ 450px | 抽屉式 | 点击菜单打开，选择后自动关闭 |
+| 平板端 | 451-800px | 可收缩侧边栏 | 支持展开/收缩，动画过渡 |
+| 桌面端 | > 800px | 固定侧边栏 | 默认展开，提供更多操作空间 |
 
-```dart
-// Define your configuration model
-@JsonSerializable()
-class AppConfig implements IConfig {
-  final int id;
-  final String apiUrl;
-  final bool debugMode;
+## 🎨 主题系统
 
-  AppConfig({required this.id, required this.apiUrl, required this.debugMode});
-  
-  factory AppConfig.fromJson(Map<String, dynamic> json) => _$AppConfigFromJson(json);
-  Map<String, dynamic> toJson() => _$AppConfigToJson(this);
-}
-
-// Load configuration
-await Cat.config.load<AppConfig>(
-  LoadSource.local,
-  'app_config.json',
-  AppConfig.fromJson,
-);
-
-// Use configuration
-final config = Cat.config.getUnique<AppConfig>();
-print('API URL: ${config?.apiUrl}');
-```
-
-### Event System
+框架内置多种预设主题：
 
 ```dart
-// Define custom events
-class UserLoginEvent extends BaseEvent {
-  final String userId;
-  UserLoginEvent(this.userId);
-}
+// Material Design 3 风格
+NavigationThemes.material3Theme(context)
 
-// In your controller
-class MyController extends GetxController with EventMixin {
-  @override
-  void onInit() {
-    super.onInit();
-    
-    // Listen to events
-    listen<UserLoginEvent>((event) {
-      print('User logged in: ${event.userId}');
-    });
-  }
-  
-  void loginUser() {
-    // Fire events
-    fireEvent(UserLoginEvent('user123'));
-  }
-}
+// 紧凑风格  
+NavigationThemes.compactTheme(context)
+
+// 现代风格
+NavigationThemes.modernTheme(context)
+
+// 深色主题
+NavigationThemes.darkTheme(context)
 ```
 
-### Storage Repository
+## 🔧 配置选项
 
+### 导航配置
 ```dart
-// Define your data model
-@JsonSerializable()
-class User {
-  final String id;
-  final String name;
-  final String email;
-
-  User({required this.id, required this.name, required this.email});
-  
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
-  Map<String, dynamic> toJson() => _$UserToJson(this);
-}
-
-// Create repository
-final userRepo = Cat.storage.createSingleRepository<User>(
-  containerName: 'users',
-  key: 'current_user',
-);
-
-// Store data
-userRepo.write(
-  item: User(id: '1', name: 'John', email: 'john@example.com'),
-  toJson: (user) => user.toJson(),
-);
-
-// Read data
-final user = userRepo.read(fromJson: User.fromJson);
+NavigationConfig(
+  extendedWidth: 280,           // 展开宽度
+  collapsedWidth: 80,           // 收缩宽度  
+  drawerWidth: 300,             // 抽屉宽度
+  animationDuration: Duration(milliseconds: 300),
+  showToggleButton: true,       // 显示切换按钮
+  appName: 'Your App',          // 应用名称
+  logo: yourLogoWidget,         // 应用Logo
+  theme: customTheme,           // 自定义主题
+  headerBuilder: headerBuilder, // 自定义头部
+  footerBuilder: footerBuilder, // 自定义底部
+)
 ```
 
-### Polling Tasks
-
+### 框架配置
 ```dart
-// Add polling task
-Cat.polling?.addTask(
-  config: const TaskConfig(
-    taskId: 'sync_data',
-    interval: Duration(seconds: 30),
-    maxRetries: 3,
-    timeout: Duration(seconds: 10),
-  ),
-  getStatus: (taskId) async {
-    final response = await api.checkSyncStatus();
-    return response.status;
-  },
-  isCompleted: (status) => status == 'completed',
-  onUpdate: (taskId, status) {
-    print('Sync status: $status');
-  },
-  onError: (taskId, error) {
-    print('Sync error: $error');
-  },
-);
-```
-
-### Theme Management
-
-```dart
-// Switch themes
-Cat.theme?.changeTheme('blue');
-Cat.theme?.enableDarkMode();
-Cat.theme?.followSystem();
-
-// Register custom theme
-Cat.theme?.registerTheme(AppThemeConfig(
-  name: 'custom',
-  displayName: 'Custom Theme',
-  lightTheme: myLightTheme,
-  darkTheme: myDarkTheme,
-));
-```
-
-### Notifications
-
-```dart
-// Show notifications
-Cat.notify.showSuccess(message: 'Operation completed!');
-Cat.notify.showError(message: 'Something went wrong');
-Cat.notify.showWarning(message: 'Please check your input');
-
-// Custom notification
-Cat.notify.show(NotificationConfig(
-  title: 'Custom Title',
-  message: 'Custom message',
-  type: NotificationType.info,
-  duration: Duration(seconds: 5),
-  onTap: () => print('Notification tapped'),
-  actionText: 'Action',
-  onAction: () => print('Action pressed'),
-));
-```
-
-## 🏗️ Architecture Overview
-
-```
-Cat Framework
-├── Core Layer
-│   ├── Configuration Management
-│   ├── Event Bus System
-│   ├── Storage Repository
-│   ├── Network Protocol Adapter
-│   ├── Async Task Management
-│   └── Framework Initialization
-├── Service Layer
-│   ├── Theme Service
-│   ├── Translation Service
-│   ├── Notification Service
-│   └── Polling Service
-├── UI Layer
-│   ├── Responsive Widgets
-│   ├── Theme-Aware Components
-│   └── Notification System
-└── Utility Layer
-    ├── Type-Safe Extensions
-    ├── Helper Functions
-    └── Constants
-```
-
-## 🎯 Design Principles
-
-### 1. **Type Safety First**
-- Extensive use of Dart generics
-- Compile-time error prevention
-- Runtime type validation
-
-### 2. **Separation of Concerns**
-- Clear module boundaries
-- Single responsibility principle
-- Loose coupling between components
-
-### 3. **Lifecycle Management**
-- Automatic resource cleanup
-- Memory leak prevention
-- Proper disposal patterns
-
-### 4. **Plugin Architecture**
-- Extensible design patterns
-- Hot-swappable components
-- Custom plugin development
-
-### 5. **Developer Experience**
-- Intuitive APIs
-- Comprehensive error messages
-- Rich debugging information
-
-## 📚 Framework Components
-
-### Core Components
-- **ConfigManager**: Type-safe configuration management
-- **EventBus**: Decoupled event communication
-- **StorageRepository**: Generic data persistence
-- **ProtocolAdapter**: Network request abstraction
-- **PollingService**: Background task management
-
-### Service Components
-- **ThemeService**: Dynamic theme management
-- **TranslationService**: Internationalization support
-- **NotificationService**: User feedback system
-
-### Utility Components
-- **Cat**: Framework convenience accessor
-- **Toast**: Quick notification methods
-- **TranslationKeys**: Type-safe translation constants
-
-## 🔧 Configuration Options
-
-### Framework Configuration
-
-```dart
-const CatFrameworkConfig(
-  appName: 'My App',
-  enableLogging: true,           // Enable console logging
-  enableEvents: true,            // Enable event bus system
-  enablePolling: true,           // Enable polling service
-  enableThemes: true,            // Enable theme management
-  enableI18n: true,              // Enable internationalization
-  supportedLocales: [            // Supported languages
-    Locale('en', 'us'),
-    Locale('zh', 'cn'),
-    Locale('ja', 'jp'),
+CatFrameworkConfig(
+  appName: 'Cat Framework App',
+  supportedLocales: [
+    Locale('en', 'US'),
+    Locale('zh', 'CN'),
   ],
-  fallbackLocale: Locale('en', 'us'),
-  defaultStorageContainer: 'app_data',
-);
+  fallbackLocale: Locale('en', 'US'),
+  defaultStorageContainer: 'cat_framework',
+)
 ```
 
-## 🤝 Contributing
+## 📂 项目结构
 
-We welcome contributions! Here's how you can help:
+```
+lib/
+├── app/
+│   ├── core/                    # 核心功能
+│   │   ├── framework/           # 框架核心
+│   │   ├── navigation/          # 导航系统 ⭐
+│   │   ├── network/            # 网络层
+│   │   ├── storage/            # 存储管理
+│   │   ├── theme/              # 主题系统
+│   │   ├── i18n/               # 国际化
+│   │   └── event/              # 事件总线
+│   ├── modules/                # 业务模块
+│   │   ├── main/               # 主布局 ⭐
+│   │   ├── home/               # 首页
+│   │   ├── settings/           # 设置页
+│   │   └── profile/            # 个人资料
+│   ├── routes/                 # 路由配置
+│   ├── utils/                  # 工具类
+│   └── demo/                   # 演示页面 ⭐
+└── main.dart                   # 应用入口
+```
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+## 🎯 核心 API
 
-## 📄 License
+### 导航控制器
+```dart
+final controller = Get.find<CatNavigationController>();
 
-This project is licensed under the MIT License.
+// 导航控制
+controller.navigateTo('/target-route');
+controller.goBack();
+controller.refreshCurrentPage();
 
-## 🙏 Acknowledgments
+// 侧边栏控制
+controller.toggleSidebar();
+controller.expandSidebar(); 
+controller.collapseSidebar();
 
-- Inspired by excellent design patterns from production Flutter applications
-- Built with ❤️ using Flutter and GetX
-- Special thanks to the Flutter community for their amazing work
+// 状态查询
+bool canGoBack = controller.canGoBack;
+String currentRoute = controller.currentRoute.value;
+NavigationItem? currentItem = controller.currentItem;
+```
+
+### 框架服务
+```dart
+// 存储管理
+Cat.storage.write('key', value);
+Cat.storage.read<T>('key');
+
+// 配置管理  
+Cat.config.getString('key', defaultValue);
+Cat.config.getBool('key', defaultValue);
+
+// 事件总线
+Cat.events.fire(CustomEvent());
+Cat.events.listen<CustomEvent>((event) {});
+
+// 通知服务
+Cat.notify.showSuccess(message: 'Success!');
+Cat.notify.showError(message: 'Error!');
+
+// 主题服务
+Cat.theme?.enableDarkMode();
+Cat.theme?.enableLightMode();
+Cat.theme?.followSystem();
+```
+
+## 🎮 演示应用
+
+运行项目查看完整的演示：
+
+```bash
+flutter run
+```
+
+访问 `/main` 路由体验完整的响应式导航系统。
+
+## 🔍 主要特性演示
+
+1. **响应式断点** - 调整浏览器窗口大小观察导航模式变化
+2. **主题切换** - 在设置页面切换亮色/暗色主题  
+3. **路由管理** - 点击导航项观察页面切换和历史记录
+4. **自定义配置** - 查看各种配置选项的效果
+
+## 📖 详细文档
+
+查看完整的使用指南和 API 文档。
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+## 📄 许可证
+
+MIT License
 
 ---
 
-**Made with 🐱 by the Cat Framework Team**
+**Cat Framework** - 让 Flutter 应用开发更简单、更高效！ 🐱

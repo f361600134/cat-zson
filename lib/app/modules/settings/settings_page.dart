@@ -16,13 +16,14 @@ class SettingsPage extends StatelessWidget {
         ResponsiveRowColumnItem(
           rowFlex: 1,
           child: Container(
+            width: double.infinity,
             margin: const EdgeInsets.all(8),
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Theme.of(context).dividerColor.withOpacity(0.12),
+                color: Theme.of(context).dividerColor.withValues(alpha: 0.12),
               ),
             ),
             child: Column(
@@ -140,7 +141,7 @@ class SettingsPage extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             border: Border.all(
-              color: Theme.of(context).dividerColor.withOpacity(0.2),
+              color: Theme.of(context).dividerColor.withValues(alpha: 0.2),
             ),
             borderRadius: BorderRadius.circular(8),
           ),
@@ -396,7 +397,7 @@ class SettingsPage extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               Theme.of(context).primaryColor,
-              Theme.of(context).primaryColor.withOpacity(0.7),
+              Theme.of(context).primaryColor.withValues(alpha: 0.7),
             ],
           ),
         ),
