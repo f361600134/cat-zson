@@ -175,10 +175,9 @@ class CatNavigationController extends GetxController {
         sidebarController.selectIndex(index);
       }
       
-      // 执行路由跳转
-      if (Get.currentRoute != route) {
-        Get.offNamed(route);
-      }
+      // 不进行实际的路由跳转，只更新状态
+      // 让MainLayout内部根据currentRoute.value来显示对应的页面
+      
     } catch (e) {
       // 忽略导航错误
     }

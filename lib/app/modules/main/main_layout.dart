@@ -6,8 +6,25 @@ import '../../routes/app_routes.dart';
 import '../home/home_page.dart';
 
 /// 主布局页面 - 展示响应式框架的最佳实践
-class MainLayout extends StatelessWidget {
+class MainLayout extends StatefulWidget {
   const MainLayout({super.key});
+
+  @override
+  State<MainLayout> createState() => _MainLayoutState();
+}
+
+class _MainLayoutState extends State<MainLayout> {
+  @override
+  void initState() {
+    super.initState();
+    // 初始化默认路由
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final controller = Get.find<CatNavigationController>();
+      if (controller.currentRoute.value.isEmpty) {
+        controller.navigateTo(AppRoutes.dashboard);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
