@@ -141,7 +141,7 @@ class _MainLayoutState extends State<MainLayout> {
     );
   }
 
-  /// 简单的header实现（彻底避免溢出问题）
+  /// 优雅的header实现（使用FittedBox自动缩放，零硬编码）
   Widget _buildSimpleHeader(BuildContext context, bool extended) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -153,40 +153,35 @@ class _MainLayoutState extends State<MainLayout> {
           ),
         ),
       ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          // 🎯 关键：基于实际可用宽度而不是extended状态判断
-          final availableWidth = constraints.maxWidth;
-          final minWidthForText = 32 + 12 + 80; // 图标+间距+最小文本宽度
-          final canShowText = availableWidth >= minWidthForText;
-          
-          return canShowText
-              ? Row(
-                  children: [
-                    Icon(
-                      Icons.pets,
-                      size: 32,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'Cat Framework',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                )
-              : Center(
-                  child: Icon(
+      child: extended
+          ? FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
                     Icons.pets,
-                    size: 24,
+                    size: 32,
+                    color: Theme.of(context).primaryColor,
                   ),
-                );
-        },
-      ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Cat Framework',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : Center(
+              child: Icon(
+                Icons.pets,
+                size: 24,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
     );
   }
 
