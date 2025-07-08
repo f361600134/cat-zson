@@ -141,55 +141,51 @@ class _MainLayoutState extends State<MainLayout> {
     );
   }
 
-  /// 简单的header实现（避免溢出问题）
+  /// 简单的header实现（彻底避免溢出问题）
   Widget _buildSimpleHeader(BuildContext context, bool extended) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: Theme
-                .of(context)
-                .dividerColor
-                .withOpacity(0.1),
+            color: Theme.of(context).dividerColor.withOpacity(0.1),
             width: 1,
           ),
         ),
       ),
-      child: extended
-          ? Row(
-        children: [
-          Icon(
-            Icons.pets,
-            size: 32,
-            color: Theme
-                .of(context)
-                .primaryColor,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              'Cat Framework',
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      )
-          : Center(
-        child: Icon(
-          Icons.pets,
-          size: 24,
-          color: Theme
-              .of(context)
-              .primaryColor,
-        ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          // 🎯 关键：基于实际可用宽度而不是extended状态判断
+          final availableWidth = constraints.maxWidth;
+          final minWidthForText = 32 + 12 + 80; // 图标+间距+最小文本宽度
+          final canShowText = availableWidth >= minWidthForText;
+          
+          return canShowText
+              ? Row(
+                  children: [
+                    Icon(
+                      Icons.pets,
+                      size: 32,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        'Cat Framework',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                )
+              : Center(
+                  child: Icon(
+                    Icons.pets,
+                    size: 24,
+                  ),
+                );
+        },
       ),
     );
   }
