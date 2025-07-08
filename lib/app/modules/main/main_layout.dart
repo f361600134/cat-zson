@@ -139,37 +139,18 @@ class _MainLayoutState extends State<MainLayout> {
     );
   }
 
-  Widget _buildCustomHeader(BuildContext context, bool extended) {
-    if (!extended) {
-      //  Drawer 模式：仅显示图标，完全规避布局问题
-      return Padding(
-        padding: const EdgeInsets.all(12),
-        child: Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            gradient: LinearGradient(
-              colors: [
-                Theme.of(context).primaryColor,
-                Theme.of(context).primaryColor.withOpacity(0.8),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: const Icon(Icons.pets, color: Colors.white, size: 24),
-        ),
-      );
-    }
 
-    //  Extended 模式：显示完整 header
+  /// 自定义头部
+  Widget _buildCustomHeader(BuildContext context, bool extended) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: Theme.of(context).dividerColor.withOpacity(0.1),
+            color: Theme
+                .of(context)
+                .dividerColor
+                .withOpacity(0.1),
             width: 1,
           ),
         ),
@@ -183,259 +164,76 @@ class _MainLayoutState extends State<MainLayout> {
               borderRadius: BorderRadius.circular(8),
               gradient: LinearGradient(
                 colors: [
-                  Theme.of(context).primaryColor,
-                  Theme.of(context).primaryColor.withOpacity(0.8),
+                  Theme
+                      .of(context)
+                      .primaryColor,
+                  Theme
+                      .of(context)
+                      .primaryColor
+                      .withOpacity(0.8),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
             ),
-            child: const Icon(Icons.pets, color: Colors.white, size: 24),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Cat Framework',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  'v1.0.0',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.6),
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+            child: const Icon(
+              Icons.pets,
+              color: Colors.white,
+              size: 24,
             ),
           ),
+          if (extended) ...[
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Cat Framework',
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    'v1.0.0',
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(
+                      color: Theme
+                          .of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.6),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );
   }
 
-  // /// 自定义头部
-  // Widget _buildCustomHeader(BuildContext context, bool extended) {
-  //   if (!extended) {
-  //     return Container(
-  //       padding: const EdgeInsets.all(8),
-  //       alignment: Alignment.center,
-  //       child: Container(
-  //         width: 40,
-  //         height: 40,
-  //         decoration: BoxDecoration(
-  //           borderRadius: BorderRadius.circular(8),
-  //           gradient: LinearGradient(
-  //             colors: [
-  //               Theme.of(context).primaryColor,
-  //               Theme.of(context).primaryColor.withOpacity(0.8),
-  //             ],
-  //             begin: Alignment.topLeft,
-  //             end: Alignment.bottomRight,
-  //           ),
-  //         ),
-  //         child: const Icon(
-  //           Icons.pets,
-  //           color: Colors.white,
-  //           size: 24,
-  //         ),
-  //       ),
-  //     );
-  //   }
-  //
-  //   return Container(
-  //     padding: const EdgeInsets.all(16),
-  //     decoration: BoxDecoration(
-  //       border: Border(
-  //         bottom: BorderSide(
-  //           color: Theme
-  //               .of(context)
-  //               .dividerColor
-  //               .withOpacity(0.1),
-  //           width: 1,
-  //         ),
-  //       ),
-  //     ),
-  //     child: Row(
-  //       children: [
-  //         Container(
-  //           width: 40,
-  //           height: 40,
-  //           decoration: BoxDecoration(
-  //             borderRadius: BorderRadius.circular(8),
-  //             gradient: LinearGradient(
-  //               colors: [
-  //                 Theme
-  //                     .of(context)
-  //                     .primaryColor,
-  //                 Theme
-  //                     .of(context)
-  //                     .primaryColor
-  //                     .withOpacity(0.8),
-  //               ],
-  //               begin: Alignment.topLeft,
-  //               end: Alignment.bottomRight,
-  //             ),
-  //           ),
-  //           child: const Icon(
-  //             Icons.pets,
-  //             color: Colors.white,
-  //             size: 24,
-  //           ),
-  //         ),
-  //         if (extended) ...[
-  //           const SizedBox(width: 12),
-  //           Expanded(
-  //             child: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: [
-  //                 Text(
-  //                   'Cat Framework',
-  //                   style: Theme
-  //                       .of(context)
-  //                       .textTheme
-  //                       .titleMedium
-  //                       ?.copyWith(
-  //                     fontWeight: FontWeight.bold,
-  //                   ),
-  //                   overflow: TextOverflow.ellipsis,
-  //                 ),
-  //                 Text(
-  //                   'v1.0.0',
-  //                   style: Theme
-  //                       .of(context)
-  //                       .textTheme
-  //                       .bodySmall
-  //                       ?.copyWith(
-  //                     color: Theme
-  //                         .of(context)
-  //                         .colorScheme
-  //                         .onSurface
-  //                         .withOpacity(0.6),
-  //                     overflow: TextOverflow.ellipsis,
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ],
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // /// 自定义底部
-  // Widget _buildCustomFooter(BuildContext context, bool extended) {
-  //   return Container(
-  //     padding: const EdgeInsets.all(16),
-  //     decoration: BoxDecoration(
-  //       border: Border(
-  //         top: BorderSide(
-  //           color: Theme
-  //               .of(context)
-  //               .dividerColor
-  //               .withOpacity(0.1),
-  //           width: 1,
-  //         ),
-  //       ),
-  //     ),
-  //     child: Row(
-  //       children: [
-  //         CircleAvatar(
-  //           radius: extended ? 20 : 16,
-  //           backgroundColor: Theme
-  //               .of(context)
-  //               .primaryColor
-  //               .withOpacity(0.1),
-  //           child: Icon(
-  //             Icons.person,
-  //             size: extended ? 20 : 16,
-  //             color: Theme
-  //                 .of(context)
-  //                 .primaryColor,
-  //           ),
-  //         ),
-  //         if (extended) ...[
-  //           const SizedBox(width: 12),
-  //           Expanded(
-  //             child: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: [
-  //                 Text(
-  //                   '管理员',
-  //                   style: Theme
-  //                       .of(context)
-  //                       .textTheme
-  //                       .bodyMedium
-  //                       ?.copyWith(
-  //                     fontWeight: FontWeight.w500,
-  //                   ),
-  //                   overflow: TextOverflow.ellipsis,
-  //                 ),
-  //                 Text(
-  //                   'admin@example.com',
-  //                   style: Theme
-  //                       .of(context)
-  //                       .textTheme
-  //                       .bodySmall
-  //                       ?.copyWith(
-  //                     color: Theme
-  //                         .of(context)
-  //                         .colorScheme
-  //                         .onSurface
-  //                         .withOpacity(0.6),
-  //                   ),
-  //                   overflow: TextOverflow.ellipsis,
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //           IconButton(
-  //             icon: const Icon(Icons.logout, size: 18),
-  //             onPressed: () => _handleLogout(context),
-  //             tooltip: '退出登录',
-  //           ),
-  //         ],
-  //       ],
-  //     ),
-  //   );
-  // }
-
+  /// 自定义底部
   Widget _buildCustomFooter(BuildContext context, bool extended) {
-    if (!extended) {
-      // Drawer 模式下，仅展示居中头像
-      return Padding(
-        padding: const EdgeInsets.all(12),
-        child: Center(
-          child: CircleAvatar(
-            radius: 16,
-            backgroundColor:
-            Theme.of(context).primaryColor.withOpacity(0.1),
-            child: Icon(
-              Icons.person,
-              size: 16,
-              color: Theme.of(context).primaryColor,
-            ),
-          ),
-        ),
-      );
-    }
-
-    // Extended 模式下，展示完整信息
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         border: Border(
           top: BorderSide(
-            color: Theme.of(context).dividerColor.withOpacity(0.1),
+            color: Theme
+                .of(context)
+                .dividerColor
+                .withOpacity(0.1),
             width: 1,
           ),
         ),
@@ -443,53 +241,65 @@ class _MainLayoutState extends State<MainLayout> {
       child: Row(
         children: [
           CircleAvatar(
-            radius: 20,
-            backgroundColor:
-            Theme.of(context).primaryColor.withOpacity(0.1),
+            radius: extended ? 20 : 16,
+            backgroundColor: Theme
+                .of(context)
+                .primaryColor
+                .withOpacity(0.1),
             child: Icon(
               Icons.person,
-              size: 20,
-              color: Theme.of(context).primaryColor,
+              size: extended ? 20 : 16,
+              color: Theme
+                  .of(context)
+                  .primaryColor,
             ),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '管理员',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium
-                      ?.copyWith(fontWeight: FontWeight.w500),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  'admin@example.com',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.6),
+          if (extended) ...[
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '管理员',
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+                  Text(
+                    'admin@example.com',
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(
+                      color: Theme
+                          .of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.6),
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout, size: 18),
-            onPressed: () => _handleLogout(context),
-            tooltip: '退出登录',
-          ),
+            IconButton(
+              icon: const Icon(Icons.logout, size: 18),
+              onPressed: () => _handleLogout(context),
+              tooltip: '退出登录',
+            ),
+          ],
         ],
       ),
     );
   }
+
 
   /// 构建主内容区
   Widget _buildMainContent() {
