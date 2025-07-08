@@ -98,14 +98,15 @@ class _MainLayoutState extends State<MainLayout> {
     ];
   }
 
-  /// 构建导航配置
+  /// 构建导航配置（简化版：移除复杂自定义内容）
   NavigationConfig _buildNavigationConfig(BuildContext context) {
     return NavigationConfig(
       extendedWidth: 280,
       collapsedWidth: 72,
       drawerWidth: 300,
       animationDuration: const Duration(milliseconds: 250),
-      showToggleButton: true,
+      showToggleButton: false,
+      // 不显示侧边栏内的toggle按钮，统一用AppBar的menu
       appName: 'Cat Framework',
       logo: Container(
         width: 40,
@@ -132,187 +133,148 @@ class _MainLayoutState extends State<MainLayout> {
           size: 24,
         ),
       ),
+      // 🎯 简化：使用简单的header，避免复杂布局
       headerBuilder: (context, extended) =>
-          _buildCustomHeader(context, extended),
-      footerBuilder: (context, extended) =>
-          _buildCustomFooter(context, extended),
+          _buildSimpleHeader(context, extended),
+      // 🎯 简化：不使用footer，避免布局问题
+      footerBuilder: null,
+    );
+  }
+
+  /// 简单的header实现（避免溢出问题）
+  Widget _buildSimpleHeader(BuildContext context, bool extended) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Theme
+                .of(context)
+                .dividerColor
+                .withOpacity(0.1),
+            width: 1,
+          ),
+        ),
+      ),
+      child: extended
+          ? Row(
+        children: [
+          Icon(
+            Icons.pets,
+            size: 32,
+            color: Theme
+                .of(context)
+                .primaryColor,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              'Cat Framework',
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      )
+          : Center(
+        child: Icon(
+          Icons.pets,
+          size: 24,
+          color: Theme
+              .of(context)
+              .primaryColor,
+        ),
+      ),
     );
   }
 
 
-  /// 自定义头部
-  Widget _buildCustomHeader(BuildContext context, bool extended) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final availableWidth = constraints.maxWidth;
-        
-        // 🎯 基于实际宽度计算布局参数，而不是extended状态
-        final padding = availableWidth > 200 ? 16.0 : 8.0;
-        final iconSize = availableWidth > 200 ? 40.0 : 32.0;
-        final spacing = availableWidth > 200 ? 12.0 : 8.0;
-        
-        // 计算文本是否有足够空间显示
-        final textSpaceNeeded = padding * 2 + iconSize + spacing + 80; // 80px最小文本宽度
-        final canShowText = availableWidth >= textSpaceNeeded;
-        
-        return Container(
-          width: availableWidth,
-          padding: EdgeInsets.all(padding),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: Theme.of(context).dividerColor.withOpacity(0.1),
-                width: 1,
-              ),
-            ),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: iconSize,
-                height: iconSize,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(availableWidth > 200 ? 8 : 6),
-                  gradient: LinearGradient(
-                    colors: [
-                      Theme.of(context).primaryColor,
-                      Theme.of(context).primaryColor.withOpacity(0.8),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-                child: Icon(
-                  Icons.pets,
-                  color: Colors.white,
-                  size: availableWidth > 200 ? 24 : 18,
-                ),
-              ),
-              if (canShowText) ...[
-                SizedBox(width: spacing),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Cat Framework',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: availableWidth > 200 ? 16 : 14,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        'v1.0.0',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                          fontSize: availableWidth > 200 ? 12 : 10,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  /// 自定义底部
-  Widget _buildCustomFooter(BuildContext context, bool extended) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final availableWidth = constraints.maxWidth;
-        
-        // 🎯 基于实际宽度计算布局参数
-        final padding = availableWidth > 200 ? 16.0 : 8.0;
-        final avatarRadius = availableWidth > 200 ? 20.0 : 16.0;
-        final iconSize = availableWidth > 200 ? 20.0 : 16.0;
-        final spacing = availableWidth > 200 ? 12.0 : 8.0;
-        
-        // 🎯 精确计算所需空间 + 安全边距
-        final avatarDiameter = avatarRadius * 2;  // 头像直径
-        final iconButtonWidth = 32.0;  // IconButton实际占用宽度
-        final minTextWidth = 60.0;  // 最小文本宽度
-        final safetyMargin = 5.0;  // 安全边距，防止微小溢出
-        
-        // 计算是否有足够空间显示文本和按钮
-        final requiredWidth = padding * 2 + avatarDiameter + spacing + minTextWidth + iconButtonWidth + safetyMargin;
-        final canShowText = availableWidth >= requiredWidth;
-        
-        return ClipRect(
-          child: Container(
-            width: availableWidth,
-            padding: EdgeInsets.all(padding),
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  color: Theme.of(context).dividerColor.withOpacity(0.1),
-                  width: 1,
-                ),
-              ),
-            ),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: avatarRadius,
-                  backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
-                  child: Icon(
-                    Icons.person,
-                    size: iconSize,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
-                if (canShowText) ...[
-                  SizedBox(width: spacing),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          '管理员',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w500,
-                            fontSize: availableWidth > 200 ? 14 : 12,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                        Text(
-                          'admin@example.com',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                            fontSize: availableWidth > 200 ? 12 : 10,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    width: iconButtonWidth,
-                    height: iconButtonWidth,
-                    child: IconButton(
-                      icon: const Icon(Icons.logout, size: 18),
-                      onPressed: () => _handleLogout(context),
-                      tooltip: '退出登录',
-                      padding: EdgeInsets.zero,
-                      iconSize: 18,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
+  // /// 自定义头部
+  // Widget _buildCustomHeader(BuildContext context, bool extended) {
+  //   return LayoutBuilder(
+  //     builder: (context, constraints) {
+  //       final availableWidth = constraints.maxWidth;
+  //
+  //       // 🎯 基于实际宽度计算布局参数，而不是extended状态
+  //       final padding = availableWidth > 200 ? 16.0 : 8.0;
+  //       final iconSize = availableWidth > 200 ? 40.0 : 32.0;
+  //       final spacing = availableWidth > 200 ? 12.0 : 8.0;
+  //
+  //       // 计算文本是否有足够空间显示
+  //       final textSpaceNeeded = padding * 2 + iconSize + spacing + 80; // 80px最小文本宽度
+  //       final canShowText = availableWidth >= textSpaceNeeded;
+  //
+  //       return Container(
+  //         width: availableWidth,
+  //         padding: EdgeInsets.all(padding),
+  //         decoration: BoxDecoration(
+  //           border: Border(
+  //             bottom: BorderSide(
+  //               color: Theme.of(context).dividerColor.withOpacity(0.1),
+  //               width: 1,
+  //             ),
+  //           ),
+  //         ),
+  //         child: Row(
+  //           children: [
+  //             Container(
+  //               width: iconSize,
+  //               height: iconSize,
+  //               decoration: BoxDecoration(
+  //                 borderRadius: BorderRadius.circular(availableWidth > 200 ? 8 : 6),
+  //                 gradient: LinearGradient(
+  //                   colors: [
+  //                     Theme.of(context).primaryColor,
+  //                     Theme.of(context).primaryColor.withOpacity(0.8),
+  //                   ],
+  //                   begin: Alignment.topLeft,
+  //                   end: Alignment.bottomRight,
+  //                 ),
+  //               ),
+  //               child: Icon(
+  //                 Icons.pets,
+  //                 color: Colors.white,
+  //                 size: availableWidth > 200 ? 24 : 18,
+  //               ),
+  //             ),
+  //             if (canShowText) ...[
+  //               SizedBox(width: spacing),
+  //               Expanded(
+  //                 child: Column(
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   children: [
+  //                     Text(
+  //                       'Cat Framework',
+  //                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
+  //                         fontWeight: FontWeight.bold,
+  //                         fontSize: availableWidth > 200 ? 16 : 14,
+  //                       ),
+  //                       overflow: TextOverflow.ellipsis,
+  //                     ),
+  //                     Text(
+  //                       'v1.0.0',
+  //                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
+  //                         color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+  //                         fontSize: availableWidth > 200 ? 12 : 10,
+  //                       ),
+  //                       overflow: TextOverflow.ellipsis,
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ],
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
 
   /// 构建主内容区
@@ -328,11 +290,6 @@ class _MainLayoutState extends State<MainLayout> {
           child: Container(
             width: double.infinity,
             margin: const EdgeInsets.all(16),
-            // child: GetBuilder<CatNavigationController>(
-            //   builder: (controller) {
-            //     return _getPageForRoute(controller.currentRoute.value);
-            //   },
-            // ),
             child: Obx(() {
               return _getPageForRoute(controller.currentRoute.value);
             }),
@@ -422,100 +379,5 @@ class _MainLayoutState extends State<MainLayout> {
           ),
     );
   }
-}
 
-/// 设置页面
-class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(8),
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Theme
-            .of(context)
-            .colorScheme
-            .surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Theme
-              .of(context)
-              .dividerColor
-              .withOpacity(0.12),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            Icons.settings,
-            size: 48,
-            color: Theme
-                .of(context)
-                .primaryColor,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            '系统设置',
-            style: Theme
-                .of(context)
-                .textTheme
-                .headlineSmall,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '在这里可以配置系统的各种设置选项。',
-            style: Theme
-                .of(context)
-                .textTheme
-                .bodyMedium,
-          ),
-          const SizedBox(height: 24),
-          _buildSettingsList(context),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSettingsList(BuildContext context) {
-    return Card(
-      child: Column(
-        children: [
-          ListTile(
-            leading: const Icon(Icons.palette),
-            title: const Text('主题设置'),
-            subtitle: const Text('配置应用外观主题'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {},
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.language),
-            title: const Text('语言设置'),
-            subtitle: const Text('切换应用显示语言'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {},
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.notifications),
-            title: const Text('通知设置'),
-            subtitle: const Text('管理系统通知偏好'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {},
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.security),
-            title: const Text('安全设置'),
-            subtitle: const Text('账户安全相关配置'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {},
-          ),
-        ],
-      ),
-    );
-  }
 }

@@ -471,3 +471,100 @@ class DashboardPage extends StatelessWidget {
 }
 
 
+
+/// 设置页面
+class SettingsPage extends StatelessWidget {
+  const SettingsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Theme
+            .of(context)
+            .colorScheme
+            .surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Theme
+              .of(context)
+              .dividerColor
+              .withOpacity(0.12),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.settings,
+            size: 48,
+            color: Theme
+                .of(context)
+                .primaryColor,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            '系统设置',
+            style: Theme
+                .of(context)
+                .textTheme
+                .headlineSmall,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '在这里可以配置系统的各种设置选项。',
+            style: Theme
+                .of(context)
+                .textTheme
+                .bodyMedium,
+          ),
+          const SizedBox(height: 24),
+          _buildSettingsList(context),
+        ],
+      ),
+    );
+  }
+
+
+  Widget _buildSettingsList(BuildContext context) {
+    return Card(
+      child: Column(
+        children: [
+          ListTile(
+            leading: const Icon(Icons.palette),
+            title: const Text('主题设置'),
+            subtitle: const Text('配置应用外观主题'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {},
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.language),
+            title: const Text('语言设置'),
+            subtitle: const Text('切换应用显示语言'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {},
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.notifications),
+            title: const Text('通知设置'),
+            subtitle: const Text('管理系统通知偏好'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {},
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.security),
+            title: const Text('安全设置'),
+            subtitle: const Text('账户安全相关配置'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {},
+          ),
+        ],
+      ),
+    );
+  }
+}
