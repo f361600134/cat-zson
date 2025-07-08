@@ -160,11 +160,7 @@ class _MainLayoutState extends State<MainLayout> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    Icons.pets,
-                    size: 32,
-                    color: Theme.of(context).primaryColor,
-                  ),
+                  Icon(Icons.pets, size: 32,),
                   const SizedBox(width: 12),
                   Text(
                     'Cat Framework',
@@ -175,13 +171,7 @@ class _MainLayoutState extends State<MainLayout> {
                 ],
               ),
             )
-          : Center(
-              child: Icon(
-                Icons.pets,
-                size: 24,
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
+          : Center(child: Icon(Icons.pets,size: 24,)),
     );
   }
 
