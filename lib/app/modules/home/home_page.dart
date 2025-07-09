@@ -1,11 +1,10 @@
 import 'package:cat_zson_pro/app/core/event/event_bus.dart';
 import 'package:cat_zson_pro/app/core/framework/cat_framework.dart';
-import 'package:cat_zson_pro/app/core/navigation/cat_navigation_controller.dart';
+import 'package:cat_zson_pro/app/modules/navigation/cat_navigation_controller.dart';
 import 'package:cat_zson_pro/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -311,7 +310,7 @@ class AnalyticsPage extends StatelessWidget {
           Icon(
             Icons.analytics,
             size: 48,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
           const SizedBox(height: 16),
           Text(

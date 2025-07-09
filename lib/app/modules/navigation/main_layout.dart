@@ -1,9 +1,10 @@
+import 'package:cat_zson_pro/app/modules/navigation/responsive_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import '../../core/navigation/responsive_navigation.dart';
 import '../../routes/app_routes.dart';
 import '../home/home_page.dart';
+import 'cat_navigation_controller.dart';
 
 /// 主布局页面 - 展示响应式框架的最佳实践
 class MainLayout extends StatefulWidget {
@@ -174,88 +175,6 @@ class _MainLayoutState extends State<MainLayout> {
           : Center(child: Icon(Icons.pets,size: 24,)),
     );
   }
-
-
-  // /// 自定义头部
-  // Widget _buildCustomHeader(BuildContext context, bool extended) {
-  //   return LayoutBuilder(
-  //     builder: (context, constraints) {
-  //       final availableWidth = constraints.maxWidth;
-  //
-  //       // 🎯 基于实际宽度计算布局参数，而不是extended状态
-  //       final padding = availableWidth > 200 ? 16.0 : 8.0;
-  //       final iconSize = availableWidth > 200 ? 40.0 : 32.0;
-  //       final spacing = availableWidth > 200 ? 12.0 : 8.0;
-  //
-  //       // 计算文本是否有足够空间显示
-  //       final textSpaceNeeded = padding * 2 + iconSize + spacing + 80; // 80px最小文本宽度
-  //       final canShowText = availableWidth >= textSpaceNeeded;
-  //
-  //       return Container(
-  //         width: availableWidth,
-  //         padding: EdgeInsets.all(padding),
-  //         decoration: BoxDecoration(
-  //           border: Border(
-  //             bottom: BorderSide(
-  //               color: Theme.of(context).dividerColor.withOpacity(0.1),
-  //               width: 1,
-  //             ),
-  //           ),
-  //         ),
-  //         child: Row(
-  //           children: [
-  //             Container(
-  //               width: iconSize,
-  //               height: iconSize,
-  //               decoration: BoxDecoration(
-  //                 borderRadius: BorderRadius.circular(availableWidth > 200 ? 8 : 6),
-  //                 gradient: LinearGradient(
-  //                   colors: [
-  //                     Theme.of(context).primaryColor,
-  //                     Theme.of(context).primaryColor.withOpacity(0.8),
-  //                   ],
-  //                   begin: Alignment.topLeft,
-  //                   end: Alignment.bottomRight,
-  //                 ),
-  //               ),
-  //               child: Icon(
-  //                 Icons.pets,
-  //                 color: Colors.white,
-  //                 size: availableWidth > 200 ? 24 : 18,
-  //               ),
-  //             ),
-  //             if (canShowText) ...[
-  //               SizedBox(width: spacing),
-  //               Expanded(
-  //                 child: Column(
-  //                   crossAxisAlignment: CrossAxisAlignment.start,
-  //                   children: [
-  //                     Text(
-  //                       'Cat Framework',
-  //                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-  //                         fontWeight: FontWeight.bold,
-  //                         fontSize: availableWidth > 200 ? 16 : 14,
-  //                       ),
-  //                       overflow: TextOverflow.ellipsis,
-  //                     ),
-  //                     Text(
-  //                       'v1.0.0',
-  //                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-  //                         color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-  //                         fontSize: availableWidth > 200 ? 12 : 10,
-  //                       ),
-  //                       overflow: TextOverflow.ellipsis,
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ),
-  //             ],
-  //           ],
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 
 
   /// 构建主内容区
