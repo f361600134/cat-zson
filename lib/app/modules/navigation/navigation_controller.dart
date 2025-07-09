@@ -128,6 +128,12 @@ class NavigationController extends GetxController {
         expandSidebar();
       });
     }
+    // 如果变为 Mobile/Tablet 且 Sidebar 是展开状态，则自动收起
+    if (hasChanged && (isMobile || isTablet) && isSidebarExpanded.value) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        collapseSidebar();
+      });
+    }
   }
   
   /// 切换侧边栏状态
