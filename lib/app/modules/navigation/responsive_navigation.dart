@@ -58,12 +58,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
     _initializeControllerAsync();
   }
   
-  @override
-  void dispose() {
-    // 不要在这里处理控制器的销毁，让 GetX 自动管理
-    super.dispose();
-  }
-  
+
   Future<void> _initializeControllerAsync() async {
     // 尝试查找现有的控制器，如果没有则创建新的
     _controller = Get.find<NavigationController>();
@@ -188,7 +183,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
           Expanded(
             child: Scaffold(
               backgroundColor: widget.backgroundColor,
-              appBar: _buildAppBar(context, controller, showMenuButton: true), // 始终显示menu按钮
+              appBar: _buildAppBar(context, controller),
               body: widget.body,
               floatingActionButton: widget.floatingActionButton,
               floatingActionButtonLocation: widget.floatingActionButtonLocation,
@@ -228,7 +223,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
           Expanded(
             child: Scaffold(
               backgroundColor: widget.backgroundColor,
-              appBar: _buildAppBar(context, controller, showMenuButton: true),
+              appBar: _buildAppBar(context, controller),
               body: widget.body,
               floatingActionButton: widget.floatingActionButton,
               floatingActionButtonLocation: widget.floatingActionButtonLocation,
@@ -249,7 +244,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
     return Scaffold(
       key: controller.scaffoldKey,
       backgroundColor: widget.backgroundColor,
-      appBar: _buildAppBar(context, controller, showMenuButton: true),
+      appBar: _buildAppBar(context, controller),
       drawer: Drawer(
         width: config.drawerWidth,
         child: _buildSidebarX(
@@ -268,11 +263,10 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
     );
   }
   
-  /// 构建 AppBar（简化版：所有设备都显示menu按钮）
+  /// 构建 AppBar
   PreferredSizeWidget? _buildAppBar(
     BuildContext context,
     NavigationController controller,
-    {required bool showMenuButton}
   ) {
     if (widget.appBar != null) return widget.appBar;
     
@@ -349,20 +343,6 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
         controller: controller.sidebarController,
         theme: sidebarTheme,
         extendedTheme: sidebarTheme.copyWith(width: config.extendedWidth),
-        // extendedTheme: SidebarXTheme(
-        //   width: config.extendedWidth,
-        //   decoration: sidebarTheme.decoration,
-        //   margin: sidebarTheme.margin,
-        //   padding: sidebarTheme.padding,
-        //   iconTheme: sidebarTheme.iconTheme,
-        //   selectedIconTheme: sidebarTheme.selectedIconTheme,
-        //   textStyle: sidebarTheme.textStyle,
-        //   selectedTextStyle: sidebarTheme.selectedTextStyle,
-        //   itemTextPadding: sidebarTheme.itemTextPadding,
-        //   selectedItemTextPadding: sidebarTheme.selectedItemTextPadding,
-        //   itemDecoration: sidebarTheme.itemDecoration,
-        //   selectedItemDecoration: sidebarTheme.selectedItemDecoration,
-        // ),
         headerBuilder: config.headerBuilder,
         footerBuilder: config.footerBuilder,
         separatorBuilder: config.separatorBuilder,

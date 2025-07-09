@@ -71,13 +71,9 @@ class NavigationController extends GetxController {
   
   @override
   void onClose() {
-    try {
-      sidebarController.removeListener(_onSidebarSelectionChanged);
-      sidebarController.dispose();
-    } catch (e) {
-      // 忽略 dispose 错误
-    }
     super.onClose();
+    sidebarController.removeListener(_onSidebarSelectionChanged);
+    sidebarController.dispose();
   }
   
   /// 设置导航项
@@ -156,7 +152,6 @@ class NavigationController extends GetxController {
   void toggleSidebar() {
     // 使用 WidgetsBinding.instance.addPostFrameCallback 确保在安全的时机执行
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      try {
         if (isMobile.value) {
           // 移动端：打开/关闭抽屉
           if (scaffoldKey.currentState?.isDrawerOpen ?? false) {
@@ -172,38 +167,26 @@ class NavigationController extends GetxController {
           isSidebarExpanded.value = !isSidebarExpanded.value;
           sidebarController.setExtended(isSidebarExpanded.value);
         }
-      } catch (e) {
-        // 忽略切换错误
-        logger.e("toggleSidebar error", error: e);
-      }
     });
   }
   
   /// 展开侧边栏
   void expandSidebar() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      try {
         if (!isMobile.value) {
           isSidebarExpanded.value = true;
           sidebarController.setExtended(true);
         }
-      } catch (e) {
-        logger.e("expandSidebar error", error: e);
-      }
     });
   }
   
   /// 收缩侧边栏
   void collapseSidebar() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      try {
         if (!isMobile.value) {
           isSidebarExpanded.value = false;
           sidebarController.setExtended(false);
         }
-      } catch (e) {
-        logger.e("collapseSidebar error", error: e);
-      }
     });
   }
   
@@ -250,11 +233,7 @@ class NavigationController extends GetxController {
   
   /// 根据标签查找导航项
   NavigationItem? findItemByLabel(String label) {
-    try {
       return navigationItems.firstWhere((item) => item.label == label);
-    } catch (e) {
-      return null;
-    }
   }
   
   /// 根据路由查找导航项
@@ -279,18 +258,14 @@ class NavigationController extends GetxController {
   
   /// SidebarX 选择变化回调
   void _onSidebarSelectionChanged() {
-    try {
-      final newIndex = sidebarController.selectedIndex;
-      if (newIndex != currentIndex.value && 
-          newIndex >= 0 && 
-          newIndex < navigationItems.length) {
-        final item = navigationItems[newIndex];
-        if (item.route != null) {
-          navigateTo(item.route!);
-        }
+    final newIndex = sidebarController.selectedIndex;
+    if (newIndex != currentIndex.value &&
+        newIndex >= 0 &&
+        newIndex < navigationItems.length) {
+      final item = navigationItems[newIndex];
+      if (item.route != null) {
+        navigateTo(item.route!);
       }
-    } catch (e) {
-      // 忽略选择变化的错误，可能是控制器已被销毁
     }
   }
   
@@ -331,18 +306,6 @@ class NavigationController extends GetxController {
     routeHistory.clear();
     if (currentRoute.value.isNotEmpty) {
       routeHistory.add(currentRoute.value);
-    }
-  }
-}
-
-/// 导航控制器扩展方法
-extension CatNavigationExtension on GetInterface {
-  /// 获取导航控制器
-  NavigationController? get navigation {
-    try {
-      return Get.find<NavigationController>();
-    } catch (e) {
-      return null;
     }
   }
 }
