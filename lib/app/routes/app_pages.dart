@@ -1,5 +1,6 @@
 import 'package:cat_zson_pro/app/modules/dashboard/dashboard_page.dart';
 import 'package:cat_zson_pro/app/modules/home/home_page.dart';
+import 'package:cat_zson_pro/app/modules/navigation/navigation_binding.dart';
 import 'package:cat_zson_pro/app/modules/profile/profile_page.dart';
 import 'package:cat_zson_pro/app/modules/navigation/navigation_page.dart';
 import 'package:cat_zson_pro/app/modules/settings/settings_page.dart';
@@ -18,7 +19,7 @@ class AppPages {
     GetPage(name: '/', page: () => const DashboardPage()),
     //GetPage(name: '/demo', page: () => const DemoPage()),
     GetPage(name: AppRoutes.profile, page: () => const ProfilePage()),
-    GetPage(name: AppRoutes.mainLayout, page: () => const NavigationPage()),
+    GetPage(name: AppRoutes.mainLayout, page: () => const NavigationPage(), binding: NavigationBinding()),
     // GetPage(
     //   name: AppRoutes.splash,
     //   page: () => SplashView(),

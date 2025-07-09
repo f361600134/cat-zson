@@ -53,6 +53,20 @@ class NavigationController extends GetxController {
     
     // 监听 SidebarX 选择变化
     sidebarController.addListener(_onSidebarSelectionChanged);
+
+    final context = Get.context;
+    if (context != null) {
+      final breakpoints = ResponsiveBreakpoints.of(context);
+      final isDesktop = breakpoints.largerThan(TABLET);
+      final isTablet = breakpoints.equals(TABLET);
+      final isMobile = breakpoints.isMobile;
+
+      updateDeviceType(
+        isDesktop: isDesktop,
+        isTablet: isTablet,
+        isMobile: isMobile,
+      );
+    }
   }
   
   @override
