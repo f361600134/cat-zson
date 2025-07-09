@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:sidebarx/sidebarx.dart';
 import '../../core/framework/page_cache_manager.dart';
 import '../../core/framework/page_lifecycle.dart';
@@ -26,7 +27,7 @@ class NavigationController extends GetxController {
   final RxString currentRoute = ''.obs;
   
   /// 侧边栏是否展开
-  final RxBool isSidebarExpanded = true.obs;
+  final RxBool isSidebarExpanded = false.obs;
   
   /// 设备类型
   final RxBool isDesktop = false.obs;
@@ -40,9 +41,9 @@ class NavigationController extends GetxController {
   void onInit() {
     super.onInit();
     
-    // 初始化页面缓存管理器
+    // FIXME 初始化页面缓存管理器
     _pageCacheManager = Get.put(PageCacheManager());
-    
+
     // 初始化 SidebarX 控制器
     sidebarController = SidebarXController(
       selectedIndex: currentIndex.value,

@@ -214,10 +214,10 @@ class _NavigationPageState extends State<NavigationPage> {
           size: 24,
         ),
       ),
-      // 🎯 简化：使用简单的header，避免复杂布局
+      // 简化：使用简单的header，避免复杂布局
       headerBuilder: (context, extended) =>
           _buildSimpleHeader(context, extended),
-      // 🎯 简化：不使用footer，避免布局问题
+      // 简化：不使用footer，避免布局问题
       footerBuilder: null,
     );
   }
