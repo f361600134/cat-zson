@@ -260,23 +260,37 @@ class _NavigationPageState extends State<NavigationPage> {
   /// 构建主内容区
   Widget _buildMainContent() {
     var controller = Get.find<NavigationController>();
-    return ResponsiveRowColumn(
-      layout: ResponsiveBreakpoints.of(Get.context!).smallerThan(TABLET)
-          ? ResponsiveRowColumnType.COLUMN
-          : ResponsiveRowColumnType.ROW,
-      children: [
-        ResponsiveRowColumnItem(
-          rowFlex: 1,
-          child: Container(
-            width: double.infinity,
-            margin: const EdgeInsets.all(16),
-            child: Obx(() {
-              return controller.getPageForRoute(controller.currentRoute.value);
-            }),
+    
+    // 判断是否为Mobile端
+    final isMobile = ResponsiveBreakpoints.of(context).smallerThan(TABLET);
+    
+    if (isMobile) {
+      // Mobile端：使用简单的Container，让内容自然滚动
+      return Container(
+        width: double.infinity,
+        margin: const EdgeInsets.all(16),
+        child: Obx(() {
+          return controller.getPageForRoute(controller.currentRoute.value);
+        }),
+      );
+    } else {
+      // Tablet/Desktop端：使用ResponsiveRowColumn
+      return ResponsiveRowColumn(
+        layout: ResponsiveRowColumnType.ROW,
+        children: [
+          ResponsiveRowColumnItem(
+            rowFlex: 1,
+            child: Container(
+              width: double.infinity,
+              margin: const EdgeInsets.all(16),
+              child: Obx(() {
+                return controller.getPageForRoute(controller.currentRoute.value);
+              }),
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    }
   }
 
   /// 刷新当前页面
