@@ -1,3 +1,5 @@
+import 'package:cat_zson_pro/app/core/framework/cat_framework.dart';
+import 'package:cat_zson_pro/app/modules/home/home_page.dart';
 import 'package:cat_zson_pro/app/modules/navigation/responsive_navigation.dart';
 import 'package:cat_zson_pro/app/modules/support/support_page.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +8,6 @@ import 'package:responsive_framework/responsive_framework.dart';
 import '../../core/framework/page_lifecycle.dart';
 import '../../routes/app_routes.dart';
 import '../dashboard/dashboard_page.dart';
-import '../home/home_page.dart'; // 这里包含了所有页面类
 import '../marketing/marketing_page.dart';
 import '../orders/orders_page.dart';
 import '../profile/profile_page.dart';
@@ -297,12 +298,7 @@ class _NavigationPageState extends State<NavigationPage> {
   void _refreshCurrentPage() {
     final controller = Get.find<NavigationController>();
     controller.refreshCurrentPage();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('页面已刷新'),
-        duration: Duration(seconds: 1),
-      ),
-    );
+    Cat.notify.showSuccess(message: "页面已刷新");
   }
   
   /// 处理菜单操作
@@ -382,12 +378,7 @@ class _NavigationPageState extends State<NavigationPage> {
             onPressed: () {
               Navigator.pop(context);
               controller.clearAllPageCache();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('缓存已清除'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
+              Cat.notify.showSuccess(message: "缓存已清除");
             },
             child: const Text('确定'),
           ),

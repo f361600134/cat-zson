@@ -360,23 +360,6 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
       return SidebarXItem(
         icon: item.icon,
         label: item.label,
-        // onTap: () {
-        //   WidgetsBinding.instance.addPostFrameCallback((_) {
-        //     // 如果是抽屉模式，选择后关闭抽屉
-        //     if (isDrawer) {
-        //       Get.back();
-        //     }
-        //
-        //     // 执行路由跳转
-        //     if (item.route != null) {
-        //       controller.navigateTo(item.route!);
-        //       widget.onRouteChanged?.call(item.route!);
-        //     }
-        //
-        //     // 执行自定义回调
-        //     item.onTap?.call();
-        //   });
-        // },
       );
     }).toList();
   }
