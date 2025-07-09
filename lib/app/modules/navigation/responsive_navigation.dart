@@ -283,7 +283,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
     return AppBar(
       elevation: widget.elevation,
       centerTitle: widget.centerTitle,
-      // 🎯 关键改动：忽略传入的leading，始终显示menu按钮
+      // 关键改动：忽略传入的leading，始终显示menu按钮
       leading: IconButton(
         icon: const Icon(Icons.menu),
         onPressed: () {
@@ -363,12 +363,12 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
           itemDecoration: sidebarTheme.itemDecoration,
           selectedItemDecoration: sidebarTheme.selectedItemDecoration,
         ),
-        // 🎯 简化：使用简单的header或者使用config中的
+        // 简化：使用简单的header或者使用config中的
         headerBuilder: config.headerBuilder,
         footerBuilder: config.footerBuilder,
         separatorBuilder: config.separatorBuilder,
         items: _buildSidebarItems(controller, isDrawer),
-        // 🎯 简化：移除toggle按钮，统一使用AppBar的menu按钮
+        // 简化：移除toggle按钮，统一使用AppBar的menu按钮
         showToggleButton: false,
       ),
     );
