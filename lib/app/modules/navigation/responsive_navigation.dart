@@ -345,32 +345,30 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
     );
     
-    return ClipRect(
-      child: SidebarX(
+    return SidebarX(
         controller: controller.sidebarController,
         theme: sidebarTheme,
-        extendedTheme: SidebarXTheme(
-          width: config.extendedWidth,
-          decoration: sidebarTheme.decoration,
-          margin: sidebarTheme.margin,
-          padding: sidebarTheme.padding,
-          iconTheme: sidebarTheme.iconTheme,
-          selectedIconTheme: sidebarTheme.selectedIconTheme,
-          textStyle: sidebarTheme.textStyle,
-          selectedTextStyle: sidebarTheme.selectedTextStyle,
-          itemTextPadding: sidebarTheme.itemTextPadding,
-          selectedItemTextPadding: sidebarTheme.selectedItemTextPadding,
-          itemDecoration: sidebarTheme.itemDecoration,
-          selectedItemDecoration: sidebarTheme.selectedItemDecoration,
-        ),
-        // 简化：使用简单的header或者使用config中的
+        extendedTheme: sidebarTheme.copyWith(width: config.extendedWidth),
+        // extendedTheme: SidebarXTheme(
+        //   width: config.extendedWidth,
+        //   decoration: sidebarTheme.decoration,
+        //   margin: sidebarTheme.margin,
+        //   padding: sidebarTheme.padding,
+        //   iconTheme: sidebarTheme.iconTheme,
+        //   selectedIconTheme: sidebarTheme.selectedIconTheme,
+        //   textStyle: sidebarTheme.textStyle,
+        //   selectedTextStyle: sidebarTheme.selectedTextStyle,
+        //   itemTextPadding: sidebarTheme.itemTextPadding,
+        //   selectedItemTextPadding: sidebarTheme.selectedItemTextPadding,
+        //   itemDecoration: sidebarTheme.itemDecoration,
+        //   selectedItemDecoration: sidebarTheme.selectedItemDecoration,
+        // ),
         headerBuilder: config.headerBuilder,
         footerBuilder: config.footerBuilder,
         separatorBuilder: config.separatorBuilder,
         items: _buildSidebarItems(controller, isDrawer),
         // 简化：移除toggle按钮，统一使用AppBar的menu按钮
         showToggleButton: false,
-      ),
     );
   }
   /// 构建侧边栏项目

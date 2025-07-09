@@ -42,8 +42,8 @@ class NavigationController extends GetxController {
   void onInit() {
     super.onInit();
     
-    // FIXME 初始化页面缓存管理器
-    _pageCacheManager = Get.put(PageCacheManager());
+    // 页面缓存管理器
+    _pageCacheManager = Get.find<PageCacheManager>();
 
     // 初始化 SidebarX 控制器
     sidebarController = SidebarXController(
@@ -188,7 +188,7 @@ class NavigationController extends GetxController {
           sidebarController.setExtended(true);
         }
       } catch (e) {
-        // 忽略展开错误
+        logger.e("expandSidebar error", error: e);
       }
     });
   }
@@ -202,7 +202,7 @@ class NavigationController extends GetxController {
           sidebarController.setExtended(false);
         }
       } catch (e) {
-        // 忽略收缩错误
+        logger.e("collapseSidebar error", error: e);
       }
     });
   }
@@ -233,7 +233,7 @@ class NavigationController extends GetxController {
       // 让MainLayout内部根据currentRoute.value来显示对应的页面
       
     } catch (e) {
-      // 忽略导航错误
+      logger.e("navigateTo error", error: e);
     }
   }
   
