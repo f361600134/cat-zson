@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sidebarx/sidebarx.dart';
+import '../../core/framework/page_cache_manager.dart';
+import '../../core/framework/page_lifecycle.dart';
 import 'responsive_navigation.dart';
 
 /// Cat Framework 导航控制器
@@ -10,6 +12,9 @@ class NavigationController extends GetxController {
   
   /// Scaffold Key (用于移动端抽屉)
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  
+  /// 页面缓存管理器
+  late PageCacheManager _pageCacheManager;
   
   /// 导航项列表
   final RxList<NavigationItem> navigationItems = <NavigationItem>[].obs;
@@ -34,6 +39,10 @@ class NavigationController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    
+    // 初始化页面缓存管理器
+    _pageCacheManager = Get.put(PageCacheManager());
+    
     // 初始化 SidebarX 控制器
     sidebarController = SidebarXController(
       selectedIndex: currentIndex.value,
@@ -59,6 +68,25 @@ class NavigationController extends GetxController {
   void setNavigationItems(List<NavigationItem> items) {
     navigationItems.value = items;
     // 不在这里自动导航，让外部控制首次导航
+  }
+  
+  /// 注册页面工厂
+  void registerPageFactory(
+    String route, 
+    Widget Function() factory, 
+    {PageConfig? config}
+  ) {
+    _pageCacheManager.registerPageFactory(route, factory, config: config);
+  }
+  
+  /// 批量注册页面工厂
+  void registerPageFactories(Map<String, Map<String, dynamic>> factories) {
+    _pageCacheManager.registerPageFactories(factories);
+  }
+  
+  /// 获取页面（使用缓存管理）
+  Widget getPageForRoute(String route) {
+    return _pageCacheManager.getPage(route);
   }
   
   /// 初始化默认路由（只在需要时调用）
@@ -243,8 +271,33 @@ class NavigationController extends GetxController {
   /// 刷新当前页面
   void refreshCurrentPage() {
     if (currentRoute.value.isNotEmpty) {
-      Get.offNamed(currentRoute.value);
+      _pageCacheManager.refreshCurrentPage();
     }
+  }
+  
+  /// 刷新指定页面
+  void refreshPage(String route, {bool force = false}) {
+    _pageCacheManager.refreshPage(route, force: force);
+  }
+  
+  /// 清除页面缓存
+  void clearPageCache(String route) {
+    _pageCacheManager.clearPage(route);
+  }
+  
+  /// 清除所有页面缓存
+  void clearAllPageCache() {
+    _pageCacheManager.clearAllPages();
+  }
+  
+  /// 获取缓存统计信息
+  Map<String, dynamic> getCacheStats() {
+    return _pageCacheManager.getCacheStats();
+  }
+  
+  /// 打印缓存统计信息
+  void printCacheStats() {
+    _pageCacheManager.printCacheStats();
   }
   
   /// 清除导航历史

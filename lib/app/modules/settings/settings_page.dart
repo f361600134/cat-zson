@@ -173,20 +173,17 @@ class SettingsPage extends StatelessWidget {
   Widget _buildLanguageSetting(BuildContext context) {
     final translationService = Cat.i18n;
     if (translationService == null) return const SizedBox.shrink();
-
-    return Obx(() {
-      final currentLocale = Get.locale ?? const Locale('zh', 'CN');
-      return ListTile(
-        leading: Icon(
-          Icons.language,
-          color: Theme.of(context).primaryColor,
-        ),
-        title: const Text('语言设置'),
-        subtitle: Text(_getLanguageText(currentLocale)),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () => _showLanguageDialog(context),
-      );
-    });
+    final currentLocale = Get.locale ?? const Locale('zh', 'CN');
+    return ListTile(
+      leading: Icon(
+        Icons.language,
+        color: Theme.of(context).primaryColor,
+      ),
+      title: const Text('语言设置'),
+      subtitle: Text(_getLanguageText(currentLocale)),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+      onTap: () => _showLanguageDialog(context),
+    );
   }
 
   Widget _buildSwitchSetting(

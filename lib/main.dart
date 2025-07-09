@@ -1,4 +1,5 @@
 import 'package:cat_zson_pro/app/modules/home/home_page.dart';
+import 'package:cat_zson_pro/app/modules/navigation/navigation_page.dart';
 import 'package:cat_zson_pro/app/modules/navigation/navigation_controller.dart';
 import 'package:cat_zson_pro/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';

@@ -1,3 +1,4 @@
+import 'package:cat_zson_pro/app/modules/dashboard/dashboard_page.dart';
 import 'package:cat_zson_pro/app/modules/home/home_page.dart';
 import 'package:cat_zson_pro/app/modules/profile/profile_page.dart';
 import 'package:cat_zson_pro/app/modules/navigation/navigation_page.dart';
@@ -6,13 +7,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'app_routes.dart';
 
+// DemoPage 别名，指向 DashboardPage
+typedef DemoPage = DashboardPage;
+
 class AppPages {
 
   static final initial = AppRoutes.mainLayout;
 
   static final routes = [
-    GetPage(name: '/', page: () => const HomePage()),
-    GetPage(name: '/demo', page: () => const DemoPage()),
+    GetPage(name: '/', page: () => const DashboardPage()),
+    //GetPage(name: '/demo', page: () => const DemoPage()),
     GetPage(name: AppRoutes.profile, page: () => const ProfilePage()),
     GetPage(name: AppRoutes.mainLayout, page: () => const NavigationPage()),
     // GetPage(

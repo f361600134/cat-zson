@@ -1,9 +1,16 @@
 import 'package:cat_zson_pro/app/modules/navigation/responsive_navigation.dart';
+import 'package:cat_zson_pro/app/modules/support/support_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import '../../core/framework/page_lifecycle.dart';
 import '../../routes/app_routes.dart';
-import '../home/home_page.dart';
+import '../dashboard/dashboard_page.dart';
+import '../home/home_page.dart'; // 这里包含了所有页面类
+import '../marketing/marketing_page.dart';
+import '../orders/orders_page.dart';
+import '../profile/profile_page.dart';
+import '../users/users_page.dart';
 import 'navigation_controller.dart';
 
 /// 主布局页面 - 展示响应式框架的最佳实践
@@ -18,12 +25,58 @@ class _NavigationPageState extends State<NavigationPage> {
   @override
   void initState() {
     super.initState();
-    // 初始化默认路由
+    // 初始化页面工厂
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializePageFactories();
       final controller = Get.find<NavigationController>();
       if (controller.currentRoute.value.isEmpty) {
         controller.navigateTo(AppRoutes.dashboard);
       }
+    });
+  }
+  
+  /// 初始化页面工厂
+  void _initializePageFactories() {
+    final controller = Get.find<NavigationController>();
+    
+    // 注册页面工厂
+    controller.registerPageFactories({
+      AppRoutes.dashboard: {
+        'factory': () => const DashboardPage(),
+        'config': PageConfig.highPriority, // 仪表板高优先级
+      },
+      AppRoutes.analytics: {
+        'factory': () => const AnalyticsPage(),
+        'config': PageConfig.defaultConfig,
+      },
+      AppRoutes.products: {
+        'factory': () => const ProductsPage(),
+        'config': PageConfig.defaultConfig,
+      },
+      AppRoutes.users: {
+        'factory': () => const UsersPage(),
+        'config': PageConfig.defaultConfig,
+      },
+      AppRoutes.orders: {
+        'factory': () => const OrdersPage(),
+        'config': PageConfig.defaultConfig,
+      },
+      AppRoutes.marketing: {
+        'factory': () => const MarketingPage(),
+        'config': PageConfig.lowPriority, // 营销页面低优先级
+      },
+      AppRoutes.support: {
+        'factory': () => const SupportPage(),
+        'config': PageConfig.defaultConfig,
+      },
+      AppRoutes.settings: {
+        'factory': () => const SettingsPage(),
+        'config': PageConfig.lowPriority, // 设置页面低优先级
+      },
+      AppRoutes.profile: {
+        'factory': () => const ProfilePage(),
+        'config': PageConfig.defaultConfig,
+      },
     });
   }
 
@@ -39,6 +92,11 @@ class _NavigationPageState extends State<NavigationPage> {
       centerTitle: false,
       actions: [
         IconButton(
+          icon: const Icon(Icons.refresh),
+          onPressed: () => _refreshCurrentPage(),
+          tooltip: '刷新当前页面',
+        ),
+        IconButton(
           icon: const Icon(Icons.brightness_6),
           onPressed: () => _toggleTheme(),
           tooltip: '切换主题',
@@ -47,6 +105,28 @@ class _NavigationPageState extends State<NavigationPage> {
           icon: const Icon(Icons.language),
           onPressed: () => _showLanguageDialog(context),
           tooltip: '切换语言',
+        ),
+        PopupMenuButton<String>(
+          icon: const Icon(Icons.more_vert),
+          onSelected: (value) => _handleMenuAction(context, value),
+          itemBuilder: (context) => [
+            const PopupMenuItem(
+              value: 'cache_stats',
+              child: ListTile(
+                leading: Icon(Icons.analytics),
+                title: Text('缓存统计'),
+                dense: true,
+              ),
+            ),
+            const PopupMenuItem(
+              value: 'clear_cache',
+              child: ListTile(
+                leading: Icon(Icons.clear_all),
+                title: Text('清除缓存'),
+                dense: true,
+              ),
+            ),
+          ],
         ),
       ],
       body: _buildMainContent(),
@@ -191,7 +271,7 @@ class _NavigationPageState extends State<NavigationPage> {
             width: double.infinity,
             margin: const EdgeInsets.all(16),
             child: Obx(() {
-              return _getPageForRoute(controller.currentRoute.value);
+              return controller.getPageForRoute(controller.currentRoute.value);
             }),
           ),
         ),
@@ -199,28 +279,107 @@ class _NavigationPageState extends State<NavigationPage> {
     );
   }
 
-  /// 根据路由获取对应页面
-  Widget _getPageForRoute(String route) {
-    switch (route) {
-      case AppRoutes.dashboard:
-        return const DashboardPage();
-      case AppRoutes.analytics:
-        return const AnalyticsPage();
-      case AppRoutes.products:
-        return const ProductsPage();
-      case AppRoutes.users:
-        return const UsersPage();
-      case AppRoutes.orders:
-        return const OrdersPage();
-      case AppRoutes.marketing:
-        return const MarketingPage();
-      case AppRoutes.support:
-        return const SupportPage();
-      case AppRoutes.settings:
-        return const SettingsPage();
-      default:
-        return const DashboardPage();
+  /// 刷新当前页面
+  void _refreshCurrentPage() {
+    final controller = Get.find<NavigationController>();
+    controller.refreshCurrentPage();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('页面已刷新'),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+  
+  /// 处理菜单操作
+  void _handleMenuAction(BuildContext context, String action) {
+    final controller = Get.find<NavigationController>();
+    
+    switch (action) {
+      case 'cache_stats':
+        _showCacheStats(context, controller);
+        break;
+      case 'clear_cache':
+        _showClearCacheDialog(context, controller);
+        break;
     }
+  }
+  
+  /// 显示缓存统计信息
+  void _showCacheStats(BuildContext context, NavigationController controller) {
+    final stats = controller.getCacheStats();
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('缓存统计'),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('总缓存数量: ${stats['totalCached']}'),
+              Text('最大缓存数量: ${stats['maxCacheSize']}'),
+              Text('当前路由: ${stats['currentRoute']}'),
+              const SizedBox(height: 16),
+              const Text('页面详情:', style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              ...((stats['pages'] as Map<String, dynamic>).entries.map((entry) {
+                final pageInfo = entry.value as Map<String, dynamic>;
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('${entry.key}:', style: const TextStyle(fontWeight: FontWeight.w500)),
+                      Text('  优先级: ${pageInfo['priority']}'),
+                      Text('  空闲时间: ${(pageInfo['idleTime'] / 1000).toStringAsFixed(1)}s'),
+                      Text('  已过期: ${pageInfo['isExpired']}'),
+                    ],
+                  ),
+                );
+              }).toList()),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('关闭'),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  /// 显示清除缓存对话框
+  void _showClearCacheDialog(BuildContext context, NavigationController controller) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('清除缓存'),
+        content: const Text('确定要清除所有页面缓存吗？这将重新加载所有页面数据。'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('取消'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              controller.clearAllPageCache();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('缓存已清除'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            },
+            child: const Text('确定'),
+          ),
+        ],
+      ),
+    );
   }
 
   /// 切换主题

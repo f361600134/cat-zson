@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../../core/framework/base_page.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -289,44 +291,93 @@ class DemoPage extends StatelessWidget {
   }
 }
 
-class AnalyticsPage extends StatelessWidget {
+/// 数据分析页面
+class AnalyticsPage extends BasePage {
   const AnalyticsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(8),
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Theme.of(context).dividerColor.withValues(alpha: 0.12),
+  BasePageState createPageState() => _AnalyticsPageState();
+}
+
+class _AnalyticsPageState extends BasePageState<AnalyticsPage> {
+  List<Map<String, dynamic>> _analyticsData = [];
+
+  @override
+  void onPageDidShow() {
+    super.onPageDidShow();
+    refreshData();
+  }
+
+  @override
+  Future<void> onRefreshData({bool force = false}) async {
+    await Future.delayed(const Duration(milliseconds: 1000));
+
+    _analyticsData = [
+      {
+        'title': '今日访问量',
+        'value': '${2345 + DateTime.now().second}',
+        'change': '+15.2%',
+      },
+      {
+        'title': '转化率',
+        'value': '${(3.45 + DateTime.now().millisecond / 1000).toStringAsFixed(2)}%',
+        'change': '+2.1%',
+      },
+    ];
+  }
+
+  @override
+  Widget buildPage(BuildContext context) {
+    if (isRefreshing && _analyticsData.isEmpty) {
+      return buildLoadingIndicator();
+    }
+
+    return RefreshIndicator(
+      onRefresh: () => refreshData(force: true),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.analytics, size: 32, color: Theme.of(context).primaryColor),
+                const SizedBox(width: 12),
+                Text('数据分析', style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
+                const Spacer(),
+                if (isRefreshing) const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+              ],
+            ),
+            const SizedBox(height: 24),
+            ..._analyticsData.map((item) => Card(
+              margin: const EdgeInsets.only(bottom: 12),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(item['title'], style: const TextStyle(fontWeight: FontWeight.w600)),
+                          const SizedBox(height: 4),
+                          Text(item['value'], style: Theme.of(context).textTheme.headlineSmall),
+                        ],
+                      ),
+                    ),
+                    Text(item['change'], style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              ),
+            )).toList(),
+          ],
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            Icons.analytics,
-            size: 48,
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            '数据分析',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '数据分析页面，展示各种图表和统计信息。',
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ],
       ),
     );
   }
 }
+
 
 
 
@@ -340,41 +391,41 @@ class ProductsPage extends StatelessWidget {
   }
 }
 
-class UsersPage extends StatelessWidget {
-  const UsersPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return _buildSimplePage(context, '用户管理', Icons.people);
-  }
-}
-
-class OrdersPage extends StatelessWidget {
-  const OrdersPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return _buildSimplePage(context, '订单管理', Icons.shopping_cart);
-  }
-}
-
-class MarketingPage extends StatelessWidget {
-  const MarketingPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return _buildSimplePage(context, '营销中心', Icons.campaign);
-  }
-}
-
-class SupportPage extends StatelessWidget {
-  const SupportPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return _buildSimplePage(context, '客户服务', Icons.support_agent);
-  }
-}
+// class UsersPage extends StatelessWidget {
+//   const UsersPage({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return _buildSimplePage(context, '用户管理', Icons.people);
+//   }
+// }
+//
+// class OrdersPage extends StatelessWidget {
+//   const OrdersPage({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return _buildSimplePage(context, '订单管理', Icons.shopping_cart);
+//   }
+// }
+//
+// class MarketingPage extends StatelessWidget {
+//   const MarketingPage({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return _buildSimplePage(context, '营销中心', Icons.campaign);
+//   }
+// }
+//
+// class SupportPage extends StatelessWidget {
+//   const SupportPage({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return _buildSimplePage(context, '客户服务', Icons.support_agent);
+//   }
+// }
 
 Widget _buildSimplePage(BuildContext context, String title, IconData icon) {
   return Container(
@@ -411,63 +462,63 @@ Widget _buildSimplePage(BuildContext context, String title, IconData icon) {
 }
 
 
-// 示例页面组件
-class DashboardPage extends StatelessWidget {
-  const DashboardPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ResponsiveRowColumn(
-      layout: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
-          ? ResponsiveRowColumnType.COLUMN
-          : ResponsiveRowColumnType.ROW,
-      children: [
-        ResponsiveRowColumnItem(
-          rowFlex: 1,
-          child: Container(
-            width: double.infinity,
-            margin: const EdgeInsets.all(8),
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: Theme.of(context).dividerColor.withValues(alpha: 0.12),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  Icons.dashboard,
-                  size: 48,
-                  color: Theme.of(context).primaryColor,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  '仪表板',
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  '这是一个响应式仪表板页面，会根据屏幕大小自动调整布局。',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: () {
-                    Get.find<NavigationController>().navigateTo(AppRoutes.analytics);
-                  },
-                  child: const Text('查看数据分析'),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
+// // 示例页面组件
+// class DashboardPage extends StatelessWidget {
+//   const DashboardPage({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return ResponsiveRowColumn(
+//       layout: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
+//           ? ResponsiveRowColumnType.COLUMN
+//           : ResponsiveRowColumnType.ROW,
+//       children: [
+//         ResponsiveRowColumnItem(
+//           rowFlex: 1,
+//           child: Container(
+//             width: double.infinity,
+//             margin: const EdgeInsets.all(8),
+//             padding: const EdgeInsets.all(24),
+//             decoration: BoxDecoration(
+//               color: Theme.of(context).colorScheme.surface,
+//               borderRadius: BorderRadius.circular(12),
+//               border: Border.all(
+//                 color: Theme.of(context).dividerColor.withValues(alpha: 0.12),
+//               ),
+//             ),
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Icon(
+//                   Icons.dashboard,
+//                   size: 48,
+//                   color: Theme.of(context).primaryColor,
+//                 ),
+//                 const SizedBox(height: 16),
+//                 Text(
+//                   '仪表板',
+//                   style: Theme.of(context).textTheme.headlineSmall,
+//                 ),
+//                 const SizedBox(height: 8),
+//                 Text(
+//                   '这是一个响应式仪表板页面，会根据屏幕大小自动调整布局。',
+//                   style: Theme.of(context).textTheme.bodyMedium,
+//                 ),
+//                 const SizedBox(height: 24),
+//                 ElevatedButton(
+//                   onPressed: () {
+//                     Get.find<NavigationController>().navigateTo(AppRoutes.analytics);
+//                   },
+//                   child: const Text('查看数据分析'),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }
 
 
 
