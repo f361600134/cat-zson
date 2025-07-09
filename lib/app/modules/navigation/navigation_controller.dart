@@ -1,3 +1,4 @@
+import 'package:cat_zson_pro/app/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -146,8 +147,11 @@ class NavigationController extends GetxController {
           // 移动端：打开/关闭抽屉
           if (scaffoldKey.currentState?.isDrawerOpen ?? false) {
             Get.back();
+            sidebarController.setExtended(false);
           } else {
+            //打开抽屉
             scaffoldKey.currentState?.openDrawer();
+            sidebarController.setExtended(true);
           }
         } else {
           // 桌面端和平板端：展开/收缩
@@ -156,6 +160,7 @@ class NavigationController extends GetxController {
         }
       } catch (e) {
         // 忽略切换错误
+        logger.e("toggleSidebar error", error: e);
       }
     });
   }
