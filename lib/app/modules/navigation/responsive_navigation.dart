@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:sidebarx/sidebarx.dart';
-import 'cat_navigation_controller.dart';
-export 'cat_navigation_controller.dart';
+import 'navigation_controller.dart';
+export 'navigation_controller.dart';
 export 'navigation_config.dart';
 
 /// 响应式导航脚手架 - Cat Framework 核心导航组件
@@ -48,7 +48,7 @@ class CatResponsiveScaffold extends StatefulWidget {
 }
 
 class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
-  CatNavigationController? _controller;
+  NavigationController? _controller;
   bool _isInitialized = false;
   String _currentBreakpoint = '';
 
@@ -66,7 +66,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
   
   Future<void> _initializeControllerAsync() async {
     // 尝试查找现有的控制器，如果没有则创建新的
-    _controller = Get.find<CatNavigationController>();
+    _controller = Get.find<NavigationController>();
 
     // 等待到下一个事件循环
     await Future.delayed(Duration.zero);
@@ -163,7 +163,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
   /// 桌面端布局 - 固定侧边栏（简化版：也显示menu按钮）
   Widget _buildDesktopLayout(
     BuildContext context,
-    CatNavigationController controller,
+    NavigationController controller,
     NavigationConfig config,
   ) {
     return Scaffold(
@@ -203,7 +203,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
   /// 平板端布局 - 可收缩侧边栏
   Widget _buildTabletLayout(
     BuildContext context,
-    CatNavigationController controller,
+    NavigationController controller,
     NavigationConfig config,
   ) {
     return Scaffold(
@@ -243,7 +243,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
   /// 移动端布局 - 抽屉式侧边栏
   Widget _buildMobileLayout(
     BuildContext context,
-    CatNavigationController controller,
+    NavigationController controller,
     NavigationConfig config,
   ) {
     return Scaffold(
@@ -271,7 +271,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
   /// 构建 AppBar（简化版：所有设备都显示menu按钮）
   PreferredSizeWidget? _buildAppBar(
     BuildContext context,
-    CatNavigationController controller,
+    NavigationController controller,
     {required bool showMenuButton}
   ) {
     if (widget.appBar != null) return widget.appBar;
@@ -301,7 +301,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
   /// 构建 SidebarX（简化版：移除复杂自定义内容）
   Widget _buildSidebarX(
     BuildContext context,
-    CatNavigationController controller,
+    NavigationController controller,
     NavigationConfig config,
     {required bool canToggle,
     required bool extended,
@@ -375,7 +375,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
   }
   /// 构建侧边栏项目
   List<SidebarXItem> _buildSidebarItems(
-    CatNavigationController controller,
+    NavigationController controller,
     bool isDrawer,
   ) {
     return controller.navigationItems.map((item) {

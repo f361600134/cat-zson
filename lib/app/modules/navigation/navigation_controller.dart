@@ -4,7 +4,7 @@ import 'package:sidebarx/sidebarx.dart';
 import 'responsive_navigation.dart';
 
 /// Cat Framework 导航控制器
-class CatNavigationController extends GetxController {
+class NavigationController extends GetxController {
   /// SidebarX 控制器
   late SidebarXController sidebarController;
   
@@ -259,9 +259,9 @@ class CatNavigationController extends GetxController {
 /// 导航控制器扩展方法
 extension CatNavigationExtension on GetInterface {
   /// 获取导航控制器
-  CatNavigationController? get navigation {
+  NavigationController? get navigation {
     try {
-      return Get.find<CatNavigationController>();
+      return Get.find<NavigationController>();
     } catch (e) {
       return null;
     }

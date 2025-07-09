@@ -1,6 +1,6 @@
 import 'package:cat_zson_pro/app/modules/home/home_page.dart';
 import 'package:cat_zson_pro/app/modules/profile/profile_page.dart';
-import 'package:cat_zson_pro/app/modules/navigation/main_layout.dart';
+import 'package:cat_zson_pro/app/modules/navigation/navigation_page.dart';
 import 'package:cat_zson_pro/app/modules/settings/settings_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -14,7 +14,7 @@ class AppPages {
     GetPage(name: '/', page: () => const HomePage()),
     GetPage(name: '/demo', page: () => const DemoPage()),
     GetPage(name: AppRoutes.profile, page: () => const ProfilePage()),
-    GetPage(name: AppRoutes.mainLayout, page: () => const MainLayout()),
+    GetPage(name: AppRoutes.mainLayout, page: () => const NavigationPage()),
     // GetPage(
     //   name: AppRoutes.splash,
     //   page: () => SplashView(),

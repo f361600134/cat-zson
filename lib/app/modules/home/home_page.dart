@@ -1,6 +1,6 @@
 import 'package:cat_zson_pro/app/core/event/event_bus.dart';
 import 'package:cat_zson_pro/app/core/framework/cat_framework.dart';
-import 'package:cat_zson_pro/app/modules/navigation/cat_navigation_controller.dart';
+import 'package:cat_zson_pro/app/modules/navigation/navigation_controller.dart';
 import 'package:cat_zson_pro/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -456,7 +456,7 @@ class DashboardPage extends StatelessWidget {
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: () {
-                    Get.find<CatNavigationController>().navigateTo(AppRoutes.analytics);
+                    Get.find<NavigationController>().navigateTo(AppRoutes.analytics);
                   },
                   child: const Text('查看数据分析'),
                 ),

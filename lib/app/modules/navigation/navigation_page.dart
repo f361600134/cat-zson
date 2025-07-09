@@ -4,23 +4,23 @@ import 'package:get/get.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import '../../routes/app_routes.dart';
 import '../home/home_page.dart';
-import 'cat_navigation_controller.dart';
+import 'navigation_controller.dart';
 
 /// 主布局页面 - 展示响应式框架的最佳实践
-class MainLayout extends StatefulWidget {
-  const MainLayout({super.key});
+class NavigationPage extends StatefulWidget {
+  const NavigationPage({super.key});
 
   @override
-  State<MainLayout> createState() => _MainLayoutState();
+  State<NavigationPage> createState() => _NavigationPageState();
 }
 
-class _MainLayoutState extends State<MainLayout> {
+class _NavigationPageState extends State<NavigationPage> {
   @override
   void initState() {
     super.initState();
     // 初始化默认路由
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final controller = Get.find<CatNavigationController>();
+      final controller = Get.find<NavigationController>();
       if (controller.currentRoute.value.isEmpty) {
         controller.navigateTo(AppRoutes.dashboard);
       }
@@ -179,7 +179,7 @@ class _MainLayoutState extends State<MainLayout> {
 
   /// 构建主内容区
   Widget _buildMainContent() {
-    var controller = Get.find<CatNavigationController>();
+    var controller = Get.find<NavigationController>();
     return ResponsiveRowColumn(
       layout: ResponsiveBreakpoints.of(Get.context!).smallerThan(TABLET)
           ? ResponsiveRowColumnType.COLUMN
