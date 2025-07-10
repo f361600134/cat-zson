@@ -1,0 +1,66 @@
+
+import 'package:cat_zson_pro/app/core/i18n/translation_keys.dart';
+
+class EnUs {
+
+  static Map<String, String> values = {
+    TranslationKeys.appName: 'Cat Framework',
+    TranslationKeys.welcome: 'Welcome',
+    TranslationKeys.hello: 'Hello',
+    TranslationKeys.loading: 'Loading...',
+    TranslationKeys.error: 'Error',
+    TranslationKeys.success: 'Success',
+    TranslationKeys.cancel: 'Cancel',
+    TranslationKeys.confirm: 'Confirm',
+    TranslationKeys.save: 'Save',
+    TranslationKeys.delete: 'Delete',
+    TranslationKeys.edit: 'Edit',
+    TranslationKeys.add: 'Add',
+    TranslationKeys.settings: 'Settings',
+    TranslationKeys.about: 'About',
+    TranslationKeys.logout: 'Logout',
+    TranslationKeys.login: 'Login',
+    TranslationKeys.email: 'Email',
+    TranslationKeys.password: 'Password',
+    TranslationKeys.username: 'Username',
+    TranslationKeys.phone: 'Phone',
+    TranslationKeys.language: 'Language',
+    TranslationKeys.theme: 'Theme',
+    TranslationKeys.darkMode: 'Dark Mode',
+    TranslationKeys.lightMode: 'Light Mode',
+    TranslationKeys.retry: 'Retry',
+    TranslationKeys.refresh: 'Refresh',
+    TranslationKeys.noData: 'No data available',
+    TranslationKeys.networkError: 'Network connection error',
+    TranslationKeys.timeoutError: 'Request timeout',
+    TranslationKeys.unknownError: 'Unknown error occurred',
+
+    TranslationKeys.dashboard: 'Dashboard',
+    TranslationKeys.dataAnalysis: 'Data Analytics',
+    TranslationKeys.productManagement: 'Product Management',
+    TranslationKeys.userManagement: 'User Management',
+    TranslationKeys.orderManagement: 'Order Management',
+    TranslationKeys.marketingCenter: 'Marketing Center',
+    TranslationKeys.customerService: 'Customer Service',
+    TranslationKeys.systemSettings: 'System Settings',
+
+    TranslationKeys.totalSales: 'Total Sales',
+    TranslationKeys.userCount: 'User Count',
+    TranslationKeys.orderCount: 'Order Count',
+    TranslationKeys.productCount: 'Product Count',
+    TranslationKeys.quickActions: 'Quick Actions',
+    TranslationKeys.recentActivities: 'Recent Activities',
+    TranslationKeys.createOrder: 'Create Order',
+    TranslationKeys.addUser: 'Add User',
+    TranslationKeys.manageProducts: 'Manage Products',
+    TranslationKeys.viewReports: 'View Reports',
+    TranslationKeys.fromCustomer: 'From customer Zhang San',
+    TranslationKeys.minutesAgo: ' @minutes minutes ago',
+    TranslationKeys.newUserRegistration: 'New user registration',
+    TranslationKeys.userRegistered: 'Li Si has registered successfully',
+    TranslationKeys.stockAlert: 'Low stock alert',
+    TranslationKeys.productLowStock: 'Product A is low in stock',
+    TranslationKeys.newOrder: 'New Order', // 英文
+  };
+
+}

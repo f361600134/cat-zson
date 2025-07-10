@@ -1,4 +1,5 @@
 import 'package:cat_zson_pro/app/core/framework/cat_framework.dart';
+import 'package:cat_zson_pro/app/core/i18n/translation_keys.dart';
 import 'package:cat_zson_pro/app/modules/home/home_page.dart';
 import 'package:cat_zson_pro/app/modules/navigation/responsive_navigation.dart';
 import 'package:cat_zson_pro/app/modules/support/support_page.dart';
@@ -99,12 +100,12 @@ class _NavigationPageState extends State<NavigationPage> {
         ),
         IconButton(
           icon: const Icon(Icons.brightness_6),
-          onPressed: () => _toggleTheme(),
+          onPressed: () => _showThemeSelector(context),
           tooltip: '切换主题',
         ),
         IconButton(
           icon: const Icon(Icons.language),
-          onPressed: () => _showLanguageDialog(context),
+          onPressed: () => _showLanguageSelector(context),
           tooltip: '切换语言',
         ),
         PopupMenuButton<String>(
@@ -139,42 +140,42 @@ class _NavigationPageState extends State<NavigationPage> {
     return [
       NavigationItem(
         icon: Icons.dashboard_outlined,
-        label: '仪表板',
+        label: TranslationKeys.dashboard,
         route: AppRoutes.dashboard,
       ),
       NavigationItem(
         icon: Icons.analytics_outlined,
-        label: '数据分析',
+        label: TranslationKeys.dataAnalysis,
         route: AppRoutes.analytics,
       ),
       NavigationItem(
         icon: Icons.inventory_2_outlined,
-        label: '产品管理',
+        label: TranslationKeys.productManagement,
         route: AppRoutes.products,
       ),
       NavigationItem(
         icon: Icons.people_outline,
-        label: '用户管理',
+        label: TranslationKeys.userManagement,
         route: AppRoutes.users,
       ),
       NavigationItem(
         icon: Icons.shopping_cart_outlined,
-        label: '订单管理',
+        label: TranslationKeys.orderManagement,
         route: AppRoutes.orders,
       ),
       NavigationItem(
         icon: Icons.campaign_outlined,
-        label: '营销中心',
+        label: TranslationKeys.marketingCenter,
         route: AppRoutes.marketing,
       ),
       NavigationItem(
         icon: Icons.support_agent_outlined,
-        label: '客户服务',
+        label: TranslationKeys.customerService,
         route: AppRoutes.support,
       ),
       NavigationItem(
         icon: Icons.settings_outlined,
-        label: '系统设置',
+        label: TranslationKeys.systemSettings,
         route: AppRoutes.settings,
       ),
     ];
@@ -387,38 +388,6 @@ class _NavigationPageState extends State<NavigationPage> {
     );
   }
 
-  /// 切换主题
-  void _toggleTheme() {
-    // 实现主题切换逻辑
-    debugPrint('Toggle theme');
-  }
-
-  /// 显示语言选择对话框
-  void _showLanguageDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) =>
-          AlertDialog(
-            title: const Text('选择语言'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.language),
-                  title: const Text('中文'),
-                  onTap: () => Navigator.pop(context),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.language),
-                  title: const Text('English'),
-                  onTap: () => Navigator.pop(context),
-                ),
-              ],
-            ),
-          ),
-    );
-  }
-
   /// 处理退出登录
   void _handleLogout(BuildContext context) {
     showDialog(
@@ -441,6 +410,74 @@ class _NavigationPageState extends State<NavigationPage> {
               ),
             ],
           ),
+    );
+  }
+
+  void _showThemeSelector(BuildContext context) {
+    final themeService = Cat.theme;
+    if (themeService == null) return;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Select Theme'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: const Text('Light Mode'),
+              leading: const Icon(Icons.light_mode),
+              onTap: () {
+                themeService.enableLightMode();
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Dark Mode'),
+              leading: const Icon(Icons.dark_mode),
+              onTap: () {
+                themeService.enableDarkMode();
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Follow System'),
+              leading: const Icon(Icons.settings_system_daydream),
+              onTap: () {
+                themeService.followSystem();
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showLanguageSelector(BuildContext context) {
+    final translationService = Cat.i18n;
+    if (translationService == null) return;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Select Language'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: translationService.languages.entries.map((entry) {
+            return ListTile(
+              title: Text(entry.key),
+              onTap: () {
+                translationService.changeLocale(
+                  entry.value.languageCode,
+                  entry.value.countryCode,
+                );
+                Navigator.pop(context);
+              },
+            );
+          }).toList(),
+        ),
+      ),
     );
   }
 

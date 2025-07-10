@@ -21,10 +21,10 @@ class CatResponsiveScaffold extends StatefulWidget {
   final Widget? leading;
   final bool? centerTitle;
   final double? elevation;
-  
+
   /// 路由切换回调
   final void Function(String route)? onRouteChanged;
-  
+
   const CatResponsiveScaffold({
     super.key,
     required this.body,
@@ -57,7 +57,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
     super.initState();
     _initializeControllerAsync();
   }
-  
+
 
   Future<void> _initializeControllerAsync() async {
     // 尝试查找现有的控制器，如果没有则创建新的
@@ -65,19 +65,19 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
 
     // 等待到下一个事件循环
     await Future.delayed(Duration.zero);
-    
+
     if (!mounted || _controller == null) return;
-    
+
     // 安全地初始化导航项
     if (_controller!.navigationItems.isEmpty && widget.navigationItems.isNotEmpty) {
       _controller!.setNavigationItems(widget.navigationItems);
-      
+
       // 如果当前路由为空，初始化默认路由
       if (_controller!.currentRoute.value.isEmpty) {
         _controller!.initializeDefaultRoute();
       }
     }
-    
+
     // 标记为已初始化
     if (mounted) {
       setState(() {
@@ -89,7 +89,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    
+
     // 安全地检查断点变化
     if (_isInitialized && _controller != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -97,15 +97,15 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
       });
     }
   }
-  
+
   void _checkBreakpointChanges() {
     if (!mounted || _controller == null) return;
-    
+
     final breakpoints = ResponsiveBreakpoints.of(context);
     final isDesktop = breakpoints.largerThan(TABLET);
     final isTablet = breakpoints.equals(TABLET);
     final isMobile = breakpoints.isMobile;
-    
+
     String newBreakpoint = '';
     if (isDesktop) {
       newBreakpoint = 'desktop';
@@ -114,7 +114,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
     } else {
       newBreakpoint = 'mobile';
     }
-    
+
     // 只在断点真正改变时更新
     if (_currentBreakpoint != newBreakpoint) {
       _currentBreakpoint = newBreakpoint;
@@ -137,14 +137,14 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
         ),
       );
     }
-    
+
     // 获取配置
     final navConfig = widget.config ?? NavigationConfig();
-    
+
     // 判断设备类型（仅读取，不更新状态）
     final isDesktop = ResponsiveBreakpoints.of(context).largerThan(TABLET);
     final isTablet = ResponsiveBreakpoints.of(context).equals(TABLET);
-    
+
     // 构建不同布局
     if (isDesktop) {
       return _buildDesktopLayout(context, _controller!, navConfig);
@@ -154,7 +154,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
       return _buildMobileLayout(context, _controller!, navConfig);
     }
   }
-  
+
   /// 桌面端布局 - 固定侧边栏（简化版：也显示menu按钮）
   Widget _buildDesktopLayout(
     BuildContext context,
@@ -194,7 +194,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
       ),
     );
   }
-  
+
   /// 平板端布局 - 可收缩侧边栏
   Widget _buildTabletLayout(
     BuildContext context,
@@ -234,7 +234,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
       ),
     );
   }
-  
+
   /// 移动端布局 - 抽屉式侧边栏
   Widget _buildMobileLayout(
     BuildContext context,
@@ -245,15 +245,17 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
       key: controller.scaffoldKey,
       backgroundColor: widget.backgroundColor,
       appBar: _buildAppBar(context, controller),
-      drawer: Drawer(
-        width: config.drawerWidth,
-        child: _buildSidebarX(
-          context,
-          controller,
-          config,
-          canToggle: false,
-          extended: true,
-          isDrawer: true,
+      drawer: SafeArea(
+        child: Drawer(
+          width: config.drawerWidth,
+          child: _buildSidebarX(
+            context,
+            controller,
+            config,
+            canToggle: false,
+            extended: true,
+            isDrawer: true,
+          ),
         ),
       ),
       body: widget.body,
@@ -262,18 +264,18 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
       bottomNavigationBar: widget.bottomNavigationBar,
     );
   }
-  
+
   /// 构建 AppBar
   PreferredSizeWidget? _buildAppBar(
     BuildContext context,
     NavigationController controller,
   ) {
     if (widget.appBar != null) return widget.appBar;
-    
+
     if (widget.title == null && widget.actions == null && widget.leading == null) {
       return null;
     }
-    
+
     return AppBar(
       elevation: widget.elevation,
       centerTitle: widget.centerTitle,
@@ -291,7 +293,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
       actions: widget.actions,
     );
   }
-  
+
   /// 构建 SidebarX（简化版：移除复杂自定义内容）
   Widget _buildSidebarX(
     BuildContext context,
@@ -338,7 +340,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
       margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
     );
-    
+
     return SidebarX(
         controller: controller.sidebarController,
         theme: sidebarTheme,
@@ -359,7 +361,7 @@ class _CatResponsiveScaffoldState extends State<CatResponsiveScaffold> {
     return controller.navigationItems.map((item) {
       return SidebarXItem(
         icon: item.icon,
-        label: item.label,
+        label: item.label.tr,
       );
     }).toList();
   }
@@ -372,7 +374,7 @@ class NavigationItem {
   final String? route;
   final VoidCallback? onTap;
   final List<NavigationItem>? children;
-  
+
   const NavigationItem({
     required this.icon,
     required this.label,
@@ -386,37 +388,37 @@ class NavigationItem {
 class NavigationConfig {
   /// 侧边栏展开宽度
   final double extendedWidth;
-  
+
   /// 侧边栏收缩宽度
   final double collapsedWidth;
-  
+
   /// 抽屉宽度
   final double drawerWidth;
-  
+
   /// 动画时长
   final Duration animationDuration;
-  
+
   /// 是否显示切换按钮
   final bool showToggleButton;
-  
+
   /// 应用名称
   final String? appName;
-  
+
   /// Logo
   final Widget? logo;
-  
+
   /// 自定义主题
   final SidebarXTheme? theme;
-  
+
   /// 头部构建器
   final Widget Function(BuildContext context, bool extended)? headerBuilder;
-  
+
   /// 底部构建器
   final Widget Function(BuildContext context, bool extended)? footerBuilder;
-  
+
   /// 分隔线构建器
   final Widget Function(BuildContext context, int index)? separatorBuilder;
-  
+
   const NavigationConfig({
     this.extendedWidth = 250,
     this.collapsedWidth = 70,

@@ -16,9 +16,6 @@ class AppRoutes {
   ///home
   static const home = '/home';
 
-  /// 主布局
-  static const mainLayout = '/main';
-  
   /// 仪表板
   static const dashboard = '/dashboard';
   

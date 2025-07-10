@@ -1,10 +1,8 @@
 import 'package:cat_zson_pro/app/core/event/event_bus.dart';
 import 'package:cat_zson_pro/app/core/framework/cat_framework.dart';
-import 'package:cat_zson_pro/app/modules/navigation/navigation_controller.dart';
 import 'package:cat_zson_pro/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../core/framework/base_page.dart';
 
@@ -99,13 +97,8 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             ElevatedButton(
-              onPressed: () => Get.toNamed(AppRoutes.mainLayout),
+              onPressed: () => Get.toNamed(AppRoutes.navigation),
               child: const Text('进入主应用'),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: () => Get.toNamed('/test'),
-              child: const Text('测试导航'),
             ),
             const SizedBox(height: 16), // 底部留出空间
           ],

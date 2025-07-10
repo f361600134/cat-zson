@@ -13,25 +13,18 @@ typedef DemoPage = DashboardPage;
 
 class AppPages {
 
-  static final initial = AppRoutes.mainLayout;
+  static final initial = AppRoutes.navigation;
 
   static final routes = [
     GetPage(name: '/', page: () => const DashboardPage()),
-    //GetPage(name: '/demo', page: () => const DemoPage()),
     GetPage(name: AppRoutes.profile, page: () => const ProfilePage()),
-    GetPage(name: AppRoutes.mainLayout, page: () => const NavigationPage(), binding: NavigationBinding()),
+    GetPage(name: AppRoutes.navigation, page: () => const NavigationPage()
+        , binding: NavigationBinding(), middlewares: [AuthMiddleware()]),
+
     // GetPage(
     //   name: AppRoutes.splash,
     //   page: () => SplashView(),
     //   binding: SplashBinding(),
-    // ),
-    // GetPage(
-    //   name: AppRoutes.navigation,
-    //   page: () => NavigationView(),
-    //   binding: NavigationBinding(),
-    //   bindings: [
-    //   ],
-    //   middlewares: [AuthMiddleware()], // 受保护页面使用中间件
     // ),
   ];
 }

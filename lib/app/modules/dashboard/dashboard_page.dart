@@ -1,5 +1,7 @@
 
+import 'package:cat_zson_pro/app/core/i18n/translation_keys.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../core/framework/base_page.dart';
 
 /// 仪表板页面
@@ -32,33 +34,33 @@ class _DashboardPageState extends BasePageState<DashboardPage> {
   Future<void> onRefreshData({bool force = false}) async {
     try {
       // 模拟网络请求
-      await Future.delayed(const Duration(milliseconds: 1500));
+      //await Future.delayed(const Duration(milliseconds: 1500));
 
       // 模拟数据
       _dashboardData = [
         {
-          'title': '总销售额',
+          'title': TranslationKeys.totalSales,
           'value': '¥${(12345.67 + DateTime.now().millisecond).toStringAsFixed(2)}',
           'trend': '+12.5%',
           'icon': Icons.trending_up,
           'color': Colors.green,
         },
         {
-          'title': '用户数量',
+          'title': TranslationKeys.userCount,
           'value': '${1234 + DateTime.now().second}',
           'trend': '+8.3%',
           'icon': Icons.people,
           'color': Colors.blue,
         },
         {
-          'title': '订单数量',
+          'title': TranslationKeys.orderCount,
           'value': '${567 + DateTime.now().minute}',
           'trend': '+15.7%',
           'icon': Icons.shopping_cart,
           'color': Colors.orange,
         },
         {
-          'title': '产品数量',
+          'title': TranslationKeys.productCount,
           'value': '${89 + DateTime.now().hour}',
           'trend': '+5.2%',
           'icon': Icons.inventory,
@@ -115,7 +117,7 @@ class _DashboardPageState extends BasePageState<DashboardPage> {
                 const SizedBox(width: 8),
                 Expanded( // 用Expanded包装，防止溢出
                   child: Text(
-                    '仪表板',
+                    TranslationKeys.dashboard.tr,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -183,7 +185,7 @@ class _DashboardPageState extends BasePageState<DashboardPage> {
 
             // 快速操作区域
             Text(
-              '快速操作',
+              TranslationKeys.quickActions.tr,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -196,23 +198,23 @@ class _DashboardPageState extends BasePageState<DashboardPage> {
               children: [
                 _buildActionButton(
                   icon: Icons.add_shopping_cart,
-                  label: '新建订单',
-                  onTap: () => _showMessage('新建订单功能'),
+                  label: TranslationKeys.createOrder.tr,
+                  onTap: () => {},
                 ),
                 _buildActionButton(
                   icon: Icons.person_add,
-                  label: '添加用户',
-                  onTap: () => _showMessage('添加用户功能'),
+                  label: TranslationKeys.addUser.tr,
+                  onTap: () => {},
                 ),
                 _buildActionButton(
                   icon: Icons.inventory_2,
-                  label: '管理产品',
-                  onTap: () => _showMessage('管理产品功能'),
+                  label: TranslationKeys.manageProducts.tr,
+                  onTap: () => {},
                 ),
                 _buildActionButton(
                   icon: Icons.analytics,
-                  label: '查看报表',
-                  onTap: () => _showMessage('查看报表功能'),
+                  label: TranslationKeys.viewReports.tr,
+                  onTap: () => {},
                 ),
               ],
             ),
@@ -221,7 +223,7 @@ class _DashboardPageState extends BasePageState<DashboardPage> {
 
             // 最近活动
             Text(
-              '最近活动',
+              TranslationKeys.recentActivities.tr,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -236,23 +238,29 @@ class _DashboardPageState extends BasePageState<DashboardPage> {
                   children: [
                     _buildActivityItem(
                       icon: Icons.shopping_bag,
-                      title: '新订单 #1001',
-                      subtitle: '来自客户张三',
-                      time: '2分钟前',
+                      title: '${TranslationKeys.newOrder.tr} #1001',
+                      subtitle: TranslationKeys.fromCustomer.tr,
+                      time: TranslationKeys.minutesAgo.trParams({
+                        'minutes': '2',
+                      }),
                     ),
                     const Divider(height: 1),
                     _buildActivityItem(
                       icon: Icons.person,
-                      title: '新用户注册',
-                      subtitle: '李四已成功注册',
-                      time: '5分钟前',
+                      title: TranslationKeys.newUserRegistration.tr,
+                      subtitle: TranslationKeys.userRegistered.tr,
+                      time: TranslationKeys.minutesAgo.trParams({
+                      'minutes': '2',
+                      }),
                     ),
                     const Divider(height: 1),
                     _buildActivityItem(
                       icon: Icons.inventory,
-                      title: '库存警告',
-                      subtitle: '商品A库存不足',
-                      time: '10分钟前',
+                      title: TranslationKeys.stockAlert.tr,
+                      subtitle: TranslationKeys.productLowStock.tr,
+                      time: TranslationKeys.minutesAgo.trParams({
+                        'minutes': '10',
+                      }),
                     ),
                   ],
                 ),
@@ -321,7 +329,7 @@ class _DashboardPageState extends BasePageState<DashboardPage> {
                 const SizedBox(height: 2),
                 Flexible( // 用Flexible包装，防止溢出
                   child: Text(
-                    title,
+                    title.tr,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context).textTheme.bodySmall?.color,
                     ),
@@ -418,12 +426,6 @@ class _DashboardPageState extends BasePageState<DashboardPage> {
           ),
         ],
       ),
-    );
-  }
-
-  void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
     );
   }
 }
