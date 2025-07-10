@@ -66,8 +66,6 @@ A comprehensive Flutter scaffolding framework designed to accelerate development
 - ✅ **Linux** - Linux desktop support
 
 ## 🛠 Technology Stack
-
-- **Framework**: Flutter 3.6.0+
 - **State Management**: GetX 4.7.2
 - **Storage**: get_storage 2.1.1
 - **Network**: dio 5.7.0, http 1.2.2
@@ -78,7 +76,7 @@ A comprehensive Flutter scaffolding framework designed to accelerate development
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Flutter SDK 3.6.0 or higher
+- Flutter SDK 3.27.1 or higher
 - Dart SDK 3.0.0 or higher
 
 ### Installation
