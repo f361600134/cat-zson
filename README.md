@@ -8,7 +8,7 @@ A comprehensive Flutter scaffolding framework designed to accelerate development
 ## 🚀 Features
 
 ### Core Framework
-- **Modular Architecture**: Clean separation of下` concerns with organized module structure
+- **Modular Architecture**: Clean separation of concerns with organized module structure
 - **Lifecycle Management**: Built-in page lifecycle handling with caching support
 - **Dependency Injection**: Integrated with GetX for efficient service management
 - **Responsive Design**: Adaptive UI components for mobile, tablet, and desktop
