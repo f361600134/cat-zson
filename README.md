@@ -3,6 +3,7 @@
 
 A comprehensive Flutter scaffolding framework designed to accelerate development with a clean, modular architecture and powerful built-in services.
 ![cat-framework.gif](readme/cat-framework.gif)
+![img.png](readme/img.png)
 
 ## 🚀 Features
 
