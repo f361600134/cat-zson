@@ -1,6 +1,6 @@
-import 'package:cat_zson_pro/app/core/event/event_bus.dart';
-import 'package:cat_zson_pro/app/core/framework/cat_framework.dart';
-import 'package:cat_zson_pro/app/routes/app_routes.dart';
+import 'package:cat_framework/app/core/event/event_bus.dart';
+import 'package:cat_framework/app/core/framework/cat_framework.dart';
+import 'package:cat_framework/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

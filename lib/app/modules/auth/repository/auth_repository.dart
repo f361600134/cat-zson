@@ -1,6 +1,6 @@
 
-import 'package:cat_zson_pro/app/core/storage/single_storage_repository.dart';
-import 'package:cat_zson_pro/app/core/storage/storage_get_service.dart';
+import 'package:cat_framework/app/core/storage/single_storage_repository.dart';
+import 'package:cat_framework/app/core/storage/storage_get_service.dart';
 
 import '../structs/auth_model.dart';
 

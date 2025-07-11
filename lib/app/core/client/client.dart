@@ -1,7 +1,7 @@
-import 'package:cat_zson_pro/app/core/event/event_bus.dart';
-import 'package:cat_zson_pro/app/core/storage/storage_get_service.dart';
-import 'package:cat_zson_pro/app/modules/auth/auth_service.dart';
-import 'package:cat_zson_pro/app/utils/logger.dart';
+import 'package:cat_framework/app/core/event/event_bus.dart';
+import 'package:cat_framework/app/core/storage/storage_get_service.dart';
+import 'package:cat_framework/app/modules/auth/auth_service.dart';
+import 'package:cat_framework/app/utils/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 

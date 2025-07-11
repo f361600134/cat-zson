@@ -1,9 +1,9 @@
-import 'package:cat_zson_pro/app/modules/dashboard/dashboard_page.dart';
-import 'package:cat_zson_pro/app/modules/home/home_page.dart';
-import 'package:cat_zson_pro/app/modules/navigation/navigation_binding.dart';
-import 'package:cat_zson_pro/app/modules/profile/profile_page.dart';
-import 'package:cat_zson_pro/app/modules/navigation/navigation_page.dart';
-import 'package:cat_zson_pro/app/modules/settings/settings_page.dart';
+import 'package:cat_framework/app/modules/dashboard/dashboard_page.dart';
+import 'package:cat_framework/app/modules/home/home_page.dart';
+import 'package:cat_framework/app/modules/navigation/navigation_binding.dart';
+import 'package:cat_framework/app/modules/profile/profile_page.dart';
+import 'package:cat_framework/app/modules/navigation/navigation_page.dart';
+import 'package:cat_framework/app/modules/settings/settings_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'app_routes.dart';

@@ -1,8 +1,8 @@
-import 'package:cat_zson_pro/app/core/framework/cat_framework.dart';
-import 'package:cat_zson_pro/app/core/i18n/translation_keys.dart';
-import 'package:cat_zson_pro/app/modules/home/home_page.dart';
-import 'package:cat_zson_pro/app/modules/navigation/responsive_navigation.dart';
-import 'package:cat_zson_pro/app/modules/support/support_page.dart';
+import 'package:cat_framework/app/core/framework/cat_framework.dart';
+import 'package:cat_framework/app/core/i18n/translation_keys.dart';
+import 'package:cat_framework/app/modules/home/home_page.dart';
+import 'package:cat_framework/app/modules/navigation/responsive_navigation.dart';
+import 'package:cat_framework/app/modules/support/support_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_framework/responsive_framework.dart';

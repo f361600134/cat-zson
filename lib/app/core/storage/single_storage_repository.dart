@@ -1,4 +1,4 @@
-import 'package:cat_zson_pro/app/core/storage/storage_get_service.dart';
+import 'package:cat_framework/app/core/storage/storage_get_service.dart';
 
 ///description: 单存储服务
 ///author: Jeremy

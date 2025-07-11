@@ -1,10 +1,10 @@
-import 'package:cat_zson_pro/app/core/network/protocol_adapter.dart';
-import 'package:cat_zson_pro/app/modules/auth/device_service.dart';
-import 'package:cat_zson_pro/app/modules/auth/repository/auth_repository.dart';
-import 'package:cat_zson_pro/app/modules/auth/structs/auth_model.dart';
-import 'package:cat_zson_pro/app/modules/auth/structs/auth_proto.dart';
-import 'package:cat_zson_pro/app/routes/app_routes.dart';
-import 'package:cat_zson_pro/app/utils/logger.dart';
+import 'package:cat_framework/app/core/network/protocol_adapter.dart';
+import 'package:cat_framework/app/modules/auth/device_service.dart';
+import 'package:cat_framework/app/modules/auth/repository/auth_repository.dart';
+import 'package:cat_framework/app/modules/auth/structs/auth_model.dart';
+import 'package:cat_framework/app/modules/auth/structs/auth_proto.dart';
+import 'package:cat_framework/app/routes/app_routes.dart';
+import 'package:cat_framework/app/utils/logger.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:get/get.dart';
 

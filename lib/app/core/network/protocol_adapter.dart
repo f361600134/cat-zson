@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:cat_zson_pro/app/core/framework/cat_framework.dart';
+import 'package:cat_framework/app/core/framework/cat_framework.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../utils/logger.dart';

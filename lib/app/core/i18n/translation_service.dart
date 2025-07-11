@@ -1,5 +1,5 @@
-import 'package:cat_zson_pro/app/core/i18n/zh-cn/zh_cn.dart';
-import 'package:cat_zson_pro/app/core/i18n/zh-hk/zh_hk.dart';
+import 'package:cat_framework/app/core/i18n/zh-cn/zh_cn.dart';
+import 'package:cat_framework/app/core/i18n/zh-hk/zh_hk.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../storage/storage_repository.dart';

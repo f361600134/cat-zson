@@ -1,4 +1,4 @@
-import 'package:cat_zson_pro/app/core/i18n/translation_keys.dart';
+import 'package:cat_framework/app/core/i18n/translation_keys.dart';
 
 class ZhCn {
 

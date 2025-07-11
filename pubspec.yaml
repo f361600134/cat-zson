@@ -1,4 +1,4 @@
-name: cat_zson_pro
+name: cat_framework
 description: "Flutter Clean Framework - A scaffolding framework for Flutter applications"
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 

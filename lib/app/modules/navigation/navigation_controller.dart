@@ -1,4 +1,4 @@
-import 'package:cat_zson_pro/app/utils/logger.dart';
+import 'package:cat_framework/app/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_framework/responsive_framework.dart';

@@ -1,5 +1,5 @@
-import 'package:cat_zson_pro/app/modules/home/home_page.dart';
-import 'package:cat_zson_pro/app/routes/app_pages.dart';
+import 'package:cat_framework/app/modules/home/home_page.dart';
+import 'package:cat_framework/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'app/core/framework/cat_framework.dart';

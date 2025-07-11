@@ -1,5 +1,5 @@
-import 'package:cat_zson_pro/app/core/framework/cat_framework.dart';
-import 'package:cat_zson_pro/app/core/theme/app_color.dart';
+import 'package:cat_framework/app/core/framework/cat_framework.dart';
+import 'package:cat_framework/app/core/theme/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../storage/storage_repository.dart';

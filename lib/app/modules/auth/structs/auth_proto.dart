@@ -1,4 +1,4 @@
-import 'package:cat_zson_pro/app/core/network/protocol_adapter.dart';
+import 'package:cat_framework/app/core/network/protocol_adapter.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'auth_proto.g.dart'; // 指定生成文件的路径
@@ -14,7 +14,6 @@ class ResSms {
 
   // 将实例转换为JSON
   Map<String, dynamic> toJson() => _$ResSmsToJson(this);
-
 }
 
 @JsonSerializable()
